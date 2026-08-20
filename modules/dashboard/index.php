@@ -53,58 +53,60 @@ $stokTipis = $db->query('SELECT kode, nama, stok, satuan FROM obat WHERE stok < 
 $extraJs = '<script src="/assets/vendor/apexcharts/apexcharts.min.js"></script>
 <script>
 const chart = new ApexCharts(document.querySelector("#chart-kunjungan"), {
-    chart: { type: "area", height: 300, toolbar: { show: false } },
+    chart: { type: "area", height: 300, toolbar: { show: false }, fontFamily: "Plus Jakarta Sans, sans-serif" },
     series: [{ name: "Kunjungan", data: ' . json_encode($chartValues) . ' }],
     xaxis: { categories: ' . json_encode($chartLabels) . ' },
-    colors: ["#0d6efd"],
+    colors: ["#0d9488"],
     dataLabels: { enabled: false },
-    stroke: { curve: "smooth" },
-    fill: { type: "gradient", gradient: { opacityFrom: 0.5, opacityTo: 0.1 } },
+    stroke: { curve: "smooth", width: 2.5 },
+    fill: { type: "gradient", gradient: { opacityFrom: 0.35, opacityTo: 0.05 } },
+    grid: { borderColor: "#e2e8f0", strokeDashArray: 4 },
+    tooltip: { theme: "light" },
 });
 chart.render();
 </script>';
 
 require __DIR__ . '/../../includes/header.php';
 ?>
-<div class="row">
-    <div class="col-lg-3 col-6">
-        <div class="small-box text-bg-primary">
-            <div class="inner">
-                <h3><?= $totalPasien ?></h3>
-                <p>Total Pasien</p>
+<div class="row g-3 mb-2">
+    <div class="col-xl-3 col-md-6">
+        <div class="stat-card">
+            <div class="stat-chip chip-teal"><i class="bi bi-people-fill"></i></div>
+            <div class="stat-body">
+                <span class="stat-label">Total Pasien</span>
+                <p class="stat-value"><?= $totalPasien ?></p>
+                <a href="<?= e(url('pasien')) ?>" class="stat-link">Kelola pasien <i class="bi bi-arrow-right"></i></a>
             </div>
-            <i class="small-box-icon bi bi-people-fill"></i>
-            <a href="<?= e(url('pasien')) ?>" class="small-box-footer">Lihat <i class="bi bi-arrow-right-circle"></i></a>
         </div>
     </div>
-    <div class="col-lg-3 col-6">
-        <div class="small-box text-bg-success">
-            <div class="inner">
-                <h3><?= $kunjunganHari ?></h3>
-                <p>Kunjungan Hari Ini</p>
+    <div class="col-xl-3 col-md-6">
+        <div class="stat-card">
+            <div class="stat-chip chip-blue"><i class="bi bi-clipboard2-pulse"></i></div>
+            <div class="stat-body">
+                <span class="stat-label">Kunjungan Hari Ini</span>
+                <p class="stat-value"><?= $kunjunganHari ?></p>
+                <a href="<?= e(url('pendaftaran')) ?>" class="stat-link">Lihat pendaftaran <i class="bi bi-arrow-right"></i></a>
             </div>
-            <i class="small-box-icon bi bi-clipboard-plus"></i>
-            <a href="<?= e(url('pendaftaran')) ?>" class="small-box-footer">Lihat <i class="bi bi-arrow-right-circle"></i></a>
         </div>
     </div>
-    <div class="col-lg-3 col-6">
-        <div class="small-box text-bg-warning">
-            <div class="inner">
-                <h3><?= $antrianMenunggu ?></h3>
-                <p>Antrian Menunggu</p>
+    <div class="col-xl-3 col-md-6">
+        <div class="stat-card">
+            <div class="stat-chip chip-amber"><i class="bi bi-hourglass-split"></i></div>
+            <div class="stat-body">
+                <span class="stat-label">Antrian Menunggu</span>
+                <p class="stat-value"><?= $antrianMenunggu ?></p>
+                <a href="<?= e(url('pendaftaran', ['status' => 'menunggu'])) ?>" class="stat-link">Proses antrian <i class="bi bi-arrow-right"></i></a>
             </div>
-            <i class="small-box-icon bi bi-hourglass-split"></i>
-            <a href="<?= e(url('pendaftaran')) ?>" class="small-box-footer">Lihat <i class="bi bi-arrow-right-circle"></i></a>
         </div>
     </div>
-    <div class="col-lg-3 col-6">
-        <div class="small-box text-bg-danger">
-            <div class="inner">
-                <h3><?= rupiah($tagihanBelum) ?></h3>
-                <p>Tagihan Belum Lunas</p>
+    <div class="col-xl-3 col-md-6">
+        <div class="stat-card">
+            <div class="stat-chip chip-rose"><i class="bi bi-receipt"></i></div>
+            <div class="stat-body">
+                <span class="stat-label">Tagihan Belum Lunas</span>
+                <p class="stat-value"><?= rupiah($tagihanBelum) ?></p>
+                <a href="<?= e(url('billing', ['status' => 'belum'])) ?>" class="stat-link">Ke kasir <i class="bi bi-arrow-right"></i></a>
             </div>
-            <i class="small-box-icon bi bi-receipt"></i>
-            <a href="<?= e(url('billing')) ?>" class="small-box-footer">Lihat <i class="bi bi-arrow-right-circle"></i></a>
         </div>
     </div>
 </div>

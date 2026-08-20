@@ -1,21 +1,560 @@
-.login-page {
-    background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+/* ============================================================
+   SIMRS — Tema "Clinical Professional"
+   Palet: teal medis + navy slate. Font: Plus Jakarta Sans.
+   ============================================================ */
+
+:root,
+[data-bs-theme='light'] {
+    --bs-primary: #0d9488;
+    --bs-primary-rgb: 13, 148, 136;
+    --bs-primary-text-emphasis: #115e59;
+    --bs-primary-bg-subtle: #ccfbf1;
+    --bs-primary-border-subtle: #99f6e4;
+    --bs-link-color: #0f766e;
+    --bs-link-color-rgb: 15, 118, 110;
+    --bs-link-hover-color: #115e59;
+    --bs-tertiary-bg: #f1f5f9;
+    --simrs-teal: #0d9488;
+    --simrs-teal-dark: #0f766e;
+    --simrs-navy-900: #0b1526;
+    --simrs-navy-800: #122036;
+    --simrs-ink: #0f172a;
+    --simrs-muted: #64748b;
+    --simrs-border: rgba(15, 23, 42, 0.07);
+    --simrs-shadow-sm: 0 1px 2px rgba(15, 23, 42, 0.04), 0 4px 14px rgba(15, 23, 42, 0.05);
 }
 
-.login-logo a {
-    color: #fff;
+body {
+    font-family: 'Plus Jakarta Sans', 'Segoe UI', sans-serif;
+    color: var(--simrs-ink);
+    -webkit-font-smoothing: antialiased;
+}
+
+h1, h2, h3, h4, h5, h6 {
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-weight: 700;
+    letter-spacing: -0.015em;
+    color: var(--simrs-ink);
+}
+
+/* ---------- Header ---------- */
+.app-header {
+    border-bottom: 1px solid var(--simrs-border);
+    box-shadow: 0 1px 3px rgba(15, 23, 42, 0.04);
+}
+
+.app-header .nav-link {
+    color: var(--simrs-muted);
+    font-weight: 500;
+}
+
+.app-header .nav-link:hover {
+    color: var(--simrs-teal-dark);
+}
+
+.user-header.text-bg-primary {
+    background: linear-gradient(135deg, var(--simrs-teal) 0%, var(--simrs-teal-dark) 100%) !important;
+}
+
+/* ---------- Sidebar ---------- */
+.app-sidebar {
+    background: linear-gradient(180deg, var(--simrs-navy-800) 0%, var(--simrs-navy-900) 100%) !important;
+}
+
+.sidebar-brand {
+    background: rgba(255, 255, 255, 0.03) !important;
+    border-bottom: 1px solid rgba(148, 163, 184, 0.14);
+}
+
+.brand-link {
+    display: flex;
+    align-items: center;
+    gap: 0.65rem;
+}
+
+.brand-link:hover {
     text-decoration: none;
+}
+
+.brand-mark {
+    width: 34px;
+    height: 34px;
+    flex: 0 0 34px;
+    border-radius: 10px;
+    display: grid;
+    place-items: center;
+    background: linear-gradient(135deg, #14b8a6, #0f766e);
+    box-shadow: 0 4px 10px rgba(13, 148, 136, 0.4);
+}
+
+.brand-mark svg {
+    width: 20px;
+    height: 20px;
+}
+
+.brand-text-wrap {
+    display: flex;
+    flex-direction: column;
+    line-height: 1.15;
+}
+
+.brand-text-wrap .brand-name {
+    color: #f8fafc;
+    font-weight: 800;
+    font-size: 1.05rem;
+    letter-spacing: 0.02em;
+}
+
+.brand-text-wrap .brand-tagline {
+    color: #64748b;
+    font-size: 0.62rem;
+    font-weight: 500;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+}
+
+.app-sidebar .nav-header {
+    color: #475569;
+    font-size: 0.63rem;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    padding: 1rem 1rem 0.35rem;
+}
+
+.app-sidebar .sidebar-menu .nav-link {
+    color: rgba(203, 213, 225, 0.82);
+    border-radius: 0.55rem;
+    margin: 1px 10px;
+    padding: 0.55rem 0.85rem;
+    font-weight: 500;
+    font-size: 0.875rem;
+    transition: background 0.15s ease, color 0.15s ease;
+}
+
+.app-sidebar .sidebar-menu .nav-link .nav-icon {
+    color: #5eead4;
+    font-size: 0.95rem;
+}
+
+.app-sidebar .sidebar-menu .nav-link:hover {
+    background: rgba(148, 163, 184, 0.12);
+    color: #fff;
+}
+
+.app-sidebar .sidebar-menu .nav-link.active {
+    background: linear-gradient(90deg, rgba(13, 148, 136, 0.95), rgba(15, 118, 110, 0.85));
+    color: #fff;
+    font-weight: 600;
+    box-shadow: 0 4px 12px rgba(13, 148, 136, 0.35);
+}
+
+/* ---------- Content header ---------- */
+.app-content-header h3 {
+    font-weight: 800;
+    font-size: 1.45rem;
+    color: var(--simrs-ink);
+}
+
+.breadcrumb-item.active {
+    color: var(--simrs-muted);
+}
+
+/* ---------- Card ---------- */
+.card {
+    border: 1px solid var(--simrs-border);
+    border-radius: 0.85rem;
+    box-shadow: var(--simrs-shadow-sm);
+}
+
+.card-header {
+    background: #fff;
+    border-bottom: 1px solid var(--simrs-border);
+    border-radius: 0.85rem 0.85rem 0 0 !important;
+    padding: 0.9rem 1.15rem;
+}
+
+.card-title {
+    font-weight: 700;
+    font-size: 0.98rem;
+    letter-spacing: -0.01em;
+}
+
+.card-footer {
+    background: #fbfdff;
+    border-top: 1px solid var(--simrs-border);
+    border-radius: 0 0 0.85rem 0.85rem !important;
+}
+
+/* ---------- Table ---------- */
+.table > thead > tr > th {
+    text-transform: uppercase;
+    font-size: 0.68rem;
+    letter-spacing: 0.07em;
+    font-weight: 700;
+    color: var(--simrs-muted);
+    background: #f8fafc;
+    border-bottom-width: 1px;
+    padding: 0.7rem 0.85rem;
+    white-space: nowrap;
+}
+
+.table > tbody > tr > td {
+    padding: 0.7rem 0.85rem;
+}
+
+.table-striped > tbody > tr:nth-of-type(odd) > * {
+    --bs-table-bg-type: rgba(241, 245, 249, 0.55);
+}
+
+.table-hover > tbody > tr:hover > * {
+    --bs-table-bg-state: rgba(13, 148, 136, 0.06);
+}
+
+/* ---------- Tombol ---------- */
+.btn {
+    border-radius: 0.5rem;
+    font-weight: 600;
+    font-size: 0.85rem;
+}
+
+.btn-primary {
+    --bs-btn-bg: var(--simrs-teal);
+    --bs-btn-border-color: var(--simrs-teal);
+    --bs-btn-hover-bg: var(--simrs-teal-dark);
+    --bs-btn-hover-border-color: var(--simrs-teal-dark);
+    --bs-btn-active-bg: #115e59;
+    --bs-btn-active-border-color: #115e59;
+    --bs-btn-disabled-bg: #5eead4;
+    --bs-btn-disabled-border-color: #5eead4;
+    box-shadow: 0 2px 6px rgba(13, 148, 136, 0.3);
+}
+
+.btn-outline-primary {
+    --bs-btn-color: var(--simrs-teal-dark);
+    --bs-btn-border-color: var(--simrs-teal-dark);
+    --bs-btn-hover-bg: var(--simrs-teal);
+    --bs-btn-hover-border-color: var(--simrs-teal);
+    --bs-btn-active-bg: var(--simrs-teal-dark);
+    --bs-btn-active-border-color: var(--simrs-teal-dark);
+}
+
+/* ---------- Form ---------- */
+.form-control,
+.form-select {
+    border-radius: 0.5rem;
+    border-color: #cbd5e1;
+    font-size: 0.9rem;
+}
+
+.form-control:focus,
+.form-select:focus {
+    border-color: #14b8a6;
+    box-shadow: 0 0 0 0.22rem rgba(13, 148, 136, 0.16);
+}
+
+.form-label {
+    font-weight: 600;
+    font-size: 0.82rem;
+    color: #334155;
+}
+
+.input-group-text {
+    border-radius: 0 0.5rem 0.5rem 0;
+    border-color: #cbd5e1;
+}
+
+/* ---------- Badge & alert ---------- */
+.badge {
+    font-weight: 600;
+    font-size: 0.72rem;
+    letter-spacing: 0.02em;
+    border-radius: 999px;
+    padding: 0.35em 0.7em;
+}
+
+.alert {
+    border: none;
+    border-radius: 0.65rem;
+    font-size: 0.88rem;
+    font-weight: 500;
+}
+
+/* ---------- Pagination ---------- */
+.page-link {
+    color: var(--simrs-teal-dark);
+    border-radius: 0.4rem !important;
+    margin: 0 1px;
+    font-weight: 600;
+}
+
+.page-item.active .page-link {
+    background: var(--simrs-teal);
+    border-color: var(--simrs-teal);
+}
+
+/* ---------- Kartu statistik (dashboard) ---------- */
+.stat-card {
+    background: #fff;
+    border: 1px solid var(--simrs-border);
+    border-radius: 0.85rem;
+    box-shadow: var(--simrs-shadow-sm);
+    padding: 1.15rem 1.25rem;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    height: 100%;
+    position: relative;
+    transition: transform 0.18s ease, box-shadow 0.18s ease;
+}
+
+.stat-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(15, 23, 42, 0.09);
+}
+
+.stat-chip {
+    width: 52px;
+    height: 52px;
+    flex: 0 0 52px;
+    border-radius: 0.85rem;
+    display: grid;
+    place-items: center;
+    font-size: 1.45rem;
+}
+
+.chip-teal  { background: #ccfbf1; color: #0f766e; }
+.chip-blue  { background: #dbeafe; color: #1d4ed8; }
+.chip-amber { background: #fef3c7; color: #b45309; }
+.chip-rose  { background: #ffe4e6; color: #be123c; }
+
+.stat-body {
+    min-width: 0;
+    flex: 1;
+}
+
+.stat-label {
+    display: block;
+    font-size: 0.7rem;
+    font-weight: 700;
+    letter-spacing: 0.07em;
+    text-transform: uppercase;
+    color: var(--simrs-muted);
+}
+
+.stat-value {
+    font-size: 1.55rem;
+    font-weight: 800;
+    letter-spacing: -0.02em;
+    color: var(--simrs-ink);
+    margin: 0.1rem 0 0;
+    line-height: 1.1;
+}
+
+.stat-link {
+    font-size: 0.78rem;
+    font-weight: 600;
+    color: var(--simrs-teal-dark);
+    text-decoration: none;
+}
+
+.stat-link:hover {
+    color: #115e59;
+    text-decoration: underline;
+}
+
+/* ---------- Footer ---------- */
+.app-footer {
+    border-top: 1px solid var(--simrs-border);
+    color: var(--simrs-muted);
+    font-size: 0.82rem;
+    background: #fff;
+}
+
+/* ============================================================
+   Halaman Login — split screen
+   ============================================================ */
+.login-page {
+    min-height: 100vh;
+    display: block; /* timpa flex-center bawaan AdminLTE */
+}
+
+.login-wrap {
+    display: flex;
+    width: 100%;
+    min-height: 100vh;
+}
+
+.login-brand-panel {
+    flex: 1.1;
+    background:
+        radial-gradient(1000px 500px at 15% 10%, rgba(20, 184, 166, 0.25), transparent 60%),
+        linear-gradient(160deg, var(--simrs-navy-800) 0%, var(--simrs-navy-900) 70%);
+    color: #e2e8f0;
+    display: none;
+    flex-direction: column;
+    justify-content: center;
+    padding: 4rem 4.5rem;
+    position: relative;
+    overflow: hidden;
+}
+
+.login-brand-panel::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='72' height='72' viewBox='0 0 72 72'%3E%3Cpath d='M32 26h8v6h6v8h-6v6h-8v-6h-6v-8h6z' fill='%23ffffff' fill-opacity='0.035'/%3E%3C/svg%3E");
+    pointer-events: none;
+}
+
+@media (min-width: 992px) {
+    .login-brand-panel {
+        display: flex;
+    }
+}
+
+.login-brand-panel .brand-row {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    margin-bottom: 2.75rem;
+    position: relative;
+    z-index: 1;
+}
+
+.login-brand-panel .brand-row .brand-name {
+    font-size: 1.3rem;
+    font-weight: 800;
+    color: #fff;
+    letter-spacing: 0.02em;
+}
+
+.login-brand-panel h1 {
+    color: #fff;
+    font-size: 2.1rem;
+    font-weight: 800;
+    letter-spacing: -0.02em;
+    line-height: 1.2;
+    margin-bottom: 1rem;
+    position: relative;
+    z-index: 1;
+}
+
+.login-brand-panel .lead {
+    color: #94a3b8;
+    font-size: 0.98rem;
+    line-height: 1.7;
+    max-width: 30rem;
+    position: relative;
+    z-index: 1;
+}
+
+.login-feature {
+    list-style: none;
+    padding: 0;
+    margin: 2.25rem 0 0;
+    position: relative;
+    z-index: 1;
+}
+
+.login-feature li {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.55rem 0;
+    color: #cbd5e1;
+    font-size: 0.9rem;
+    font-weight: 500;
+}
+
+.login-feature .fi {
+    width: 30px;
+    height: 30px;
+    flex: 0 0 30px;
+    border-radius: 8px;
+    display: grid;
+    place-items: center;
+    background: rgba(20, 184, 166, 0.16);
+    color: #5eead4;
+    font-size: 0.95rem;
+}
+
+.login-form-panel {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 2.5rem 1.5rem;
+    background: #f8fafc;
+}
+
+.login-card {
+    width: 100%;
+    max-width: 400px;
+    background: #fff;
+    border: 1px solid var(--simrs-border);
+    border-radius: 1rem;
+    box-shadow: 0 12px 40px rgba(15, 23, 42, 0.08);
+    padding: 2.5rem 2.25rem;
+}
+
+.login-card .login-mark {
+    width: 52px;
+    height: 52px;
+    border-radius: 14px;
+    display: grid;
+    place-items: center;
+    background: linear-gradient(135deg, #14b8a6, #0f766e);
+    box-shadow: 0 6px 16px rgba(13, 148, 136, 0.35);
+    margin-bottom: 1.4rem;
+}
+
+.login-card .login-mark svg {
+    width: 28px;
+    height: 28px;
+}
+
+.login-card h2 {
+    font-size: 1.45rem;
+    font-weight: 800;
+    letter-spacing: -0.02em;
+    margin-bottom: 0.25rem;
+}
+
+.login-card .sub {
+    color: var(--simrs-muted);
+    font-size: 0.88rem;
+    margin-bottom: 1.6rem;
+}
+
+.login-card .btn-login {
+    padding: 0.65rem;
+    font-size: 0.95rem;
+    font-weight: 700;
+    border-radius: 0.6rem;
+}
+
+.login-hint {
+    margin-top: 1.4rem;
+    padding: 0.7rem 0.9rem;
+    background: #f0fdfa;
+    border: 1px dashed #99f6e4;
+    border-radius: 0.6rem;
+    color: #115e59;
+    font-size: 0.78rem;
+    text-align: center;
+}
+
+.login-hint code {
+    color: #0f766e;
+    font-weight: 700;
+}
+
+/* Aksi tabel agar tombol sejajar */
+.table-actions {
+    white-space: nowrap;
 }
 
 .table-actions form {
     display: inline;
-}
-
-.card .table td,
-.card .table th {
-    vertical-align: middle;
-}
-
-.stat-icon {
-    font-size: 1.6rem;
 }

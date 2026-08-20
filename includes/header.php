@@ -8,6 +8,7 @@ $currentPage = $_GET['page'] ?? 'dashboard';
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <title><?= e($pageTitle ?? 'SIMRS') ?> | SIMRS</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="/assets/vendor/fonts/plus-jakarta-sans.css" />
     <link rel="stylesheet" href="/assets/vendor/overlayscrollbars/overlayscrollbars.min.css" />
     <link rel="stylesheet" href="/assets/vendor/bootstrap-icons/bootstrap-icons.min.css" />
     <link rel="stylesheet" href="/assets/css/adminlte.min.css" />

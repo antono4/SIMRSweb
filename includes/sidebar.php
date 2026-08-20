@@ -21,8 +21,15 @@ if (($user['role'] ?? '') === 'admin') {
 <aside class="app-sidebar bg-body-secondary shadow" data-bs-theme="dark">
     <div class="sidebar-brand">
         <a href="<?= e(url('dashboard')) ?>" class="brand-link">
-            <img src="/assets/img/AdminLTELogo.png" alt="SIMRS" class="brand-image opacity-75 shadow" />
-            <span class="brand-text fw-light">SIMRS</span>
+            <span class="brand-mark">
+                <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M9.5 4h5v5.5H20v5h-5.5V20h-5v-5.5H4v-5h5.5V4z" fill="#fff" />
+                </svg>
+            </span>
+            <span class="brand-text-wrap">
+                <span class="brand-name">SIMRS</span>
+                <span class="brand-tagline">Rumah Sakit</span>
+            </span>
         </a>
     </div>
     <div class="sidebar-wrapper">
