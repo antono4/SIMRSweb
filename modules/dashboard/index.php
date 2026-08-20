@@ -59,7 +59,7 @@ $kadaluarsa = $db->query(
      ORDER BY kadaluarsa ASC LIMIT 5"
 )->fetchAll();
 
-$extraJs = '<script src="/assets/vendor/apexcharts/apexcharts.min.js"></script>
+$extraJs = '<script src="<?php echo e(base_url("")); ?>"assets/vendor/apexcharts/apexcharts.min.js"></script>
 <script>
 const chart = new ApexCharts(document.querySelector("#chart-kunjungan"), {
     chart: { type: "area", height: 300, toolbar: { show: false }, fontFamily: "Plus Jakarta Sans, sans-serif" },

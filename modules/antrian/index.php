@@ -53,7 +53,7 @@ $btn = function (int $id, string $status, string $ikon, string $warna, string $t
 require __DIR__ . '/../../includes/header.php';
 ?>
 <div class="d-flex justify-content-between align-items-center flex-wrap gap-2 mb-3">
-    <form method="get" action="/index.php" class="d-flex gap-2">
+    <form method="get" action="<?php echo e(base_url("/")); ?>"index.php" class="d-flex gap-2">
         <input type="hidden" name="page" value="antrian" />
         <select name="poli_id" class="form-select form-select-sm" onchange="this.form.submit()">
             <option value="">Semua Poli</option>
@@ -63,7 +63,7 @@ require __DIR__ . '/../../includes/header.php';
         </select>
     </form>
     <div class="d-flex gap-2">
-        <a href="/display-antrian.php" target="_blank" class="btn btn-sm btn-outline-primary">
+        <a href="<?php echo e(base_url("")); ?>"display-antrian.php" target="_blank" class="btn btn-sm btn-outline-primary">
             <i class="bi bi-tv"></i> Buka Display Antrian
         </a>
         <a href="<?= e(url('pendaftaran', ['action' => 'create'])) ?>" class="btn btn-sm btn-primary">

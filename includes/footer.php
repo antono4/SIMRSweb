@@ -6,10 +6,10 @@
         <strong>&copy; <?= date('Y') ?> <?= e(nama_rs()) ?></strong> — Sistem Informasi Manajemen Rumah Sakit.
     </footer>
 </div>
-<script src="/assets/vendor/overlayscrollbars/overlayscrollbars.browser.es6.min.js"></script>
-<script src="/assets/vendor/popper/popper.min.js"></script>
-<script src="/assets/vendor/bootstrap/bootstrap.min.js"></script>
-<script src="/assets/js/adminlte.min.js"></script>
+<script src="<?= e(base_url('assets/vendor/overlayscrollbars/overlayscrollbars.browser.es6.min.js')) ?>"></script>
+<script src="<?= e(base_url('assets/vendor/popper/popper.min.js')) ?>"></script>
+<script src="<?= e(base_url('assets/vendor/bootstrap/bootstrap.min.js')) ?>"></script>
+<script src="<?= e(base_url('assets/js/adminlte.min.js')) ?>"></script>
 <script>
     const SELECTOR_SIDEBAR_WRAPPER = '.sidebar-wrapper';
     const Default = { scrollbarTheme: 'os-theme-light', scrollbarAutoHide: 'leave', scrollbarClickScroll: true };

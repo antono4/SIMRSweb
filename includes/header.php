@@ -20,11 +20,11 @@ $currentPage = $_GET['page'] ?? 'dashboard';
             document.documentElement.setAttribute('data-lte-theme-resolved', '');
         })();
     </script>
-    <link rel="stylesheet" href="/assets/vendor/fonts/plus-jakarta-sans.css" />
-    <link rel="stylesheet" href="/assets/vendor/overlayscrollbars/overlayscrollbars.min.css" />
-    <link rel="stylesheet" href="/assets/vendor/bootstrap-icons/bootstrap-icons.min.css" />
-    <link rel="stylesheet" href="/assets/css/adminlte.min.css" />
-    <link rel="stylesheet" href="/assets/css/custom.css" />
+    <link rel="stylesheet" href="<?= e(base_url('assets/vendor/fonts/plus-jakarta-sans.css')) ?>" />
+    <link rel="stylesheet" href="<?= e(base_url('assets/vendor/overlayscrollbars/overlayscrollbars.min.css')) ?>" />
+    <link rel="stylesheet" href="<?= e(base_url('assets/vendor/bootstrap-icons/bootstrap-icons.min.css')) ?>" />
+    <link rel="stylesheet" href="<?= e(base_url('assets/css/adminlte.min.css')) ?>" />
+    <link rel="stylesheet" href="<?= e(base_url('assets/css/custom.css')) ?>" />
 </head>
 <body class="layout-fixed sidebar-expand-lg bg-body-tertiary">
 <div class="app-wrapper">
@@ -68,7 +68,7 @@ $currentPage = $_GET['page'] ?? 'dashboard';
                 </li>
                 <li class="nav-item dropdown user-menu">
                     <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">
-                        <img src="/assets/img/avatar.jpg" class="user-image rounded-circle shadow" alt="User" />
+                        <img src="<?= e(base_url('assets/img/avatar.jpg')) ?>" class="user-image rounded-circle shadow" alt="User" />
                         <span class="d-none d-md-inline"><?= e($user['nama']) ?></span>
                     </a>
                     <ul class="dropdown-menu dropdown-menu-lg dropdown-menu-end">
@@ -81,7 +81,7 @@ $currentPage = $_GET['page'] ?? 'dashboard';
                         </li>
                         <li class="user-footer">
                             <a href="<?= e(url('profil')) ?>" class="btn btn-default btn-flat">Profil</a>
-                            <a href="/logout.php" class="btn btn-danger btn-flat float-end">Keluar</a>
+                            <a href="<?= e(base_url('logout.php')) ?>" class="btn btn-danger btn-flat float-end">Keluar</a>
                         </li>
                     </ul>
                 </li>

@@ -31,7 +31,7 @@ if ($action === 'cetak') {
     <head>
         <meta charset="utf-8" />
         <title><?= e($judul) ?> <?= e($s['no_surat']) ?></title>
-        <link rel="stylesheet" href="/assets/vendor/fonts/plus-jakarta-sans.css" />
+        <link rel="stylesheet" href="<?php echo e(base_url("")); ?>"assets/vendor/fonts/plus-jakarta-sans.css" />
         <style>
             body { font-family: 'Plus Jakarta Sans', serif; color: #0f172a; margin: 0; background: #e2e8f0; }
             .paper { width: 148mm; min-height: 200mm; margin: 20px auto; background: #fff; padding: 16mm 18mm; box-shadow: 0 4px 20px rgba(0,0,0,0.15); }

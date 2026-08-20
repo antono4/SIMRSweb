@@ -182,7 +182,7 @@ require __DIR__ . '/../../includes/header.php';
         <div class="d-flex justify-content-between align-items-center flex-wrap gap-2">
             <h3 class="card-title mb-0">Daftar Pasien</h3>
             <div class="d-flex gap-2">
-                <form method="get" action="/index.php" class="d-flex gap-1">
+                <form method="get" action="<?php echo e(base_url("/")); ?>"index.php" class="d-flex gap-1">
                     <input type="hidden" name="page" value="pasien" />
                     <input type="text" name="q" class="form-control form-control-sm" placeholder="Cari nama / No. RM / NIK..." value="<?= e($q) ?>" />
                     <button class="btn btn-sm btn-outline-primary"><i class="bi bi-search"></i></button>

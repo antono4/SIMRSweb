@@ -35,6 +35,7 @@ if (($user['role'] ?? '') === 'admin') {
                     <path d="M9.5 4h5v5.5H20v5h-5.5V20h-5v-5.5H4v-5h5.5V4z" fill="#fff" />
                 </svg>
             </span>
+            <?php $baseUrl = base_url(); ?>
             <span class="brand-text-wrap">
                 <span class="brand-name">SIMRS</span>
                 <span class="brand-tagline"><?= e(nama_rs()) ?></span>

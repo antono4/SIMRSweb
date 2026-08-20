@@ -34,9 +34,9 @@ $utama = $dipanggil[0] ?? null;
     <meta http-equiv="refresh" content="15" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Display Antrian | <?= e(nama_rs()) ?></title>
-    <link rel="stylesheet" href="/assets/vendor/fonts/plus-jakarta-sans.css" />
-    <link rel="stylesheet" href="/assets/vendor/bootstrap-icons/bootstrap-icons.min.css" />
-    <link rel="stylesheet" href="/assets/css/adminlte.min.css" />
+    <link rel="stylesheet" href="<?= e(base_url('/assets/vendor/fonts/plus-jakarta-sans.css')) ?>" />
+    <link rel="stylesheet" href="<?= e(base_url('/assets/vendor/bootstrap-icons/bootstrap-icons.min.css')) ?>" />
+    <link rel="stylesheet" href="<?= e(base_url('/assets/css/adminlte.min.css')) ?>" />
     <style>
         body {
             font-family: 'Plus Jakarta Sans', sans-serif;

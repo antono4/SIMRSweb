@@ -34,14 +34,25 @@ function redirect(string $url): never
     exit;
 }
 
+// Deteksi base URL otomatis untuk mendukung berbagai setup
+// (root domain, subfolder seperti htdocs/simrs, dll)
 function base_url(string $path = ''): string
 {
-    return '/' . ltrim($path, '/');
+    static $base = null;
+    if ($base === null) {
+        $script = $_SERVER['SCRIPT_NAME'] ?? '';
+        $base = str_replace('\\', '/', dirname($script));
+        // Normalisasi: root menjadi kosong, bukan '/'
+        if ($base === '/' || $base === '.') {
+            $base = '';
+        }
+    }
+    return $base . '/' . ltrim($path, '/');
 }
 
 function url(string $page, array $params = []): string
 {
-    return '/index.php?' . http_build_query(array_merge(['page' => $page], $params));
+    return base_url('index.php?' . http_build_query(array_merge(['page' => $page], $params)));
 }
 
 function flash(string $type, string $message): void
