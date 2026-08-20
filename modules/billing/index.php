@@ -153,6 +153,10 @@ if ($action === 'detail') {
                     <?= status_badge($t['status']) ?>
                 </div>
                 <div class="card-body">
+                    <div class="invoice-rs mb-3 pb-3 border-bottom">
+                        <h5 class="mb-0 fw-bold"><?= e(nama_rs()) ?></h5>
+                        <small class="text-muted"><?= e(setting('alamat_rs')) ?> &middot; <?= e(setting('telepon_rs')) ?></small>
+                    </div>
                     <div class="row mb-3">
                         <div class="col-md-6"><b>No. Registrasi:</b> <?= e($t['no_registrasi']) ?></div>
                         <div class="col-md-6"><b>Tanggal:</b> <?= e(tgl($t['tanggal'], true)) ?></div>

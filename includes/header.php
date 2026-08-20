@@ -6,8 +6,20 @@ $currentPage = $_GET['page'] ?? 'dashboard';
 <html lang="id">
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title><?= e($pageTitle ?? 'SIMRS') ?> | SIMRS</title>
+    <title><?= e($pageTitle ?? 'SIMRS') ?> | <?= e(nama_rs()) ?></title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="color-scheme" content="light dark" />
+    <script>
+        // Terapkan tema tersimpan sebelum render; default: siang (light)
+        (function () {
+            var theme = 'light';
+            try { theme = localStorage.getItem('lte-theme') || 'light'; } catch (e) {}
+            if (theme !== 'light' && theme !== 'dark') theme = 'light';
+            document.documentElement.setAttribute('data-bs-theme', theme);
+            document.documentElement.style.colorScheme = theme;
+            document.documentElement.setAttribute('data-lte-theme-resolved', '');
+        })();
+    </script>
     <link rel="stylesheet" href="/assets/vendor/fonts/plus-jakarta-sans.css" />
     <link rel="stylesheet" href="/assets/vendor/overlayscrollbars/overlayscrollbars.min.css" />
     <link rel="stylesheet" href="/assets/vendor/bootstrap-icons/bootstrap-icons.min.css" />
@@ -27,6 +39,27 @@ $currentPage = $_GET['page'] ?? 'dashboard';
                 <li class="nav-item d-none d-md-block"><span class="nav-link"><?= e($pageTitle ?? '') ?></span></li>
             </ul>
             <ul class="navbar-nav ms-auto">
+                <li class="nav-item dropdown">
+                    <a class="nav-link" href="#" id="bd-theme" aria-label="Mode siang / malam"
+                       data-bs-toggle="dropdown" aria-expanded="false">
+                        <i class="bi bi-sun-fill" data-lte-theme-icon="light"></i>
+                        <i class="bi bi-moon-stars-fill d-none" data-lte-theme-icon="dark"></i>
+                    </a>
+                    <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="bd-theme" style="--bs-dropdown-min-width: 8rem">
+                        <li>
+                            <button type="button" class="dropdown-item d-flex align-items-center" data-bs-theme-value="light">
+                                <i class="bi bi-sun-fill me-2"></i> Siang
+                                <i class="bi bi-check-lg ms-auto d-none"></i>
+                            </button>
+                        </li>
+                        <li>
+                            <button type="button" class="dropdown-item d-flex align-items-center" data-bs-theme-value="dark">
+                                <i class="bi bi-moon-stars-fill me-2"></i> Malam
+                                <i class="bi bi-check-lg ms-auto d-none"></i>
+                            </button>
+                        </li>
+                    </ul>
+                </li>
                 <li class="nav-item">
                     <a class="nav-link" href="#" data-lte-toggle="fullscreen">
                         <i data-lte-icon="maximize" class="bi bi-arrows-fullscreen"></i>

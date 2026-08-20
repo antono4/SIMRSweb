@@ -2,8 +2,8 @@
         </div>
     </main>
     <footer class="app-footer">
-        <div class="float-end d-none d-sm-inline">SIMRS v1.0</div>
-        <strong>&copy; <?= date('Y') ?> SIMRS</strong> — Sistem Informasi Manajemen Rumah Sakit.
+        <div class="float-end d-none d-sm-inline">SIMRS v1.1</div>
+        <strong>&copy; <?= date('Y') ?> <?= e(nama_rs()) ?></strong> — Sistem Informasi Manajemen Rumah Sakit.
     </footer>
 </div>
 <script src="/assets/vendor/overlayscrollbars/overlayscrollbars.browser.es6.min.js"></script>

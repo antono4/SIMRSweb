@@ -7,6 +7,27 @@ function e(?string $value): string
     return htmlspecialchars((string) $value, ENT_QUOTES, 'UTF-8');
 }
 
+function setting(string $key, string $default = ''): string
+{
+    static $cache = null;
+    if ($cache === null) {
+        $cache = [];
+        try {
+            foreach (db()->query('SELECT kunci, nilai FROM pengaturan') as $row) {
+                $cache[$row['kunci']] = (string) $row['nilai'];
+            }
+        } catch (PDOException) {
+            // tabel belum ada (misal sebelum migrasi) — pakai default
+        }
+    }
+    return $cache[$key] ?? $default;
+}
+
+function nama_rs(): string
+{
+    return setting('nama_rs', 'SIMRS');
+}
+
 function redirect(string $url): never
 {
     header('Location: ' . $url);

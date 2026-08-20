@@ -64,6 +64,15 @@ const chart = new ApexCharts(document.querySelector("#chart-kunjungan"), {
     tooltip: { theme: "light" },
 });
 chart.render();
+
+// Sesuaikan kontras chart saat mode malam
+document.addEventListener("changed.lte.color-mode", function (e) {
+    const dark = e.detail.resolved === "dark";
+    chart.updateOptions({
+        theme: { mode: dark ? "dark" : "light" },
+        grid: { borderColor: dark ? "#334155" : "#e2e8f0" },
+    });
+});
 </script>';
 
 require __DIR__ . '/../../includes/header.php';

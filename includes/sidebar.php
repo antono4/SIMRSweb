@@ -16,6 +16,7 @@ $menu = [
 if (($user['role'] ?? '') === 'admin') {
     $menu[] = ['group' => 'SISTEM'];
     $menu[] = ['page' => 'users', 'icon' => 'bi-person-gear', 'label' => 'Manajemen User'];
+    $menu[] = ['page' => 'pengaturan', 'icon' => 'bi-gear', 'label' => 'Pengaturan RS'];
 }
 ?>
 <aside class="app-sidebar bg-body-secondary shadow" data-bs-theme="dark">
@@ -28,7 +29,7 @@ if (($user['role'] ?? '') === 'admin') {
             </span>
             <span class="brand-text-wrap">
                 <span class="brand-name">SIMRS</span>
-                <span class="brand-tagline">Rumah Sakit</span>
+                <span class="brand-tagline"><?= e(nama_rs()) ?></span>
             </span>
         </a>
     </div>

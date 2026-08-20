@@ -558,3 +558,144 @@ h1, h2, h3, h4, h5, h6 {
 .table-actions form {
     display: inline;
 }
+
+/* Sub-judul di panel brand login */
+.login-brand-panel .brand-sub {
+    color: #5eead4;
+    font-weight: 600;
+    font-size: 0.95rem;
+    letter-spacing: 0.04em;
+    margin: -0.5rem 0 1rem;
+    position: relative;
+    z-index: 1;
+}
+
+/* ============================================================
+   Mode Malam — override komponen yang memakai warna terang
+   ============================================================ */
+[data-bs-theme='dark'] {
+    --simrs-ink: #e2e8f0;
+    --simrs-muted: #94a3b8;
+    --simrs-border: rgba(148, 163, 184, 0.16);
+    --simrs-shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.25), 0 4px 14px rgba(0, 0, 0, 0.3);
+    --bs-tertiary-bg: #151d2b;
+    --bs-link-color: #2dd4bf;
+    --bs-link-color-rgb: 45, 212, 191;
+    --bs-link-hover-color: #5eead4;
+}
+
+[data-bs-theme='dark'] .card,
+[data-bs-theme='dark'] .card-header,
+[data-bs-theme='dark'] .stat-card,
+[data-bs-theme='dark'] .app-footer {
+    background-color: #1c2536;
+}
+
+[data-bs-theme='dark'] .card-footer {
+    background-color: #18202f;
+}
+
+[data-bs-theme='dark'] .app-header {
+    background-color: #1c2536 !important;
+}
+
+[data-bs-theme='dark'] .table > thead > tr > th {
+    background: #18202f;
+    color: var(--simrs-muted);
+}
+
+[data-bs-theme='dark'] .table-striped > tbody > tr:nth-of-type(odd) > * {
+    --bs-table-bg-type: rgba(148, 163, 184, 0.05);
+}
+
+[data-bs-theme='dark'] .table-hover > tbody > tr:hover > * {
+    --bs-table-bg-state: rgba(45, 212, 191, 0.08);
+}
+
+[data-bs-theme='dark'] .table {
+    --bs-table-color: var(--simrs-ink);
+    --bs-table-border-color: var(--simrs-border);
+}
+
+[data-bs-theme='dark'] .chip-teal  { background: rgba(20, 184, 166, 0.18); color: #5eead4; }
+[data-bs-theme='dark'] .chip-blue  { background: rgba(59, 130, 246, 0.18); color: #93c5fd; }
+[data-bs-theme='dark'] .chip-amber { background: rgba(245, 158, 11, 0.18); color: #fcd34d; }
+[data-bs-theme='dark'] .chip-rose  { background: rgba(244, 63, 94, 0.18);  color: #fda4af; }
+
+[data-bs-theme='dark'] .form-control,
+[data-bs-theme='dark'] .form-select {
+    background-color: #151d2b;
+    border-color: #334155;
+    color: var(--simrs-ink);
+}
+
+[data-bs-theme='dark'] .form-control:focus,
+[data-bs-theme='dark'] .form-select:focus {
+    background-color: #151d2b;
+    color: var(--simrs-ink);
+}
+
+[data-bs-theme='dark'] .form-control::placeholder {
+    color: #64748b;
+}
+
+[data-bs-theme='dark'] .form-label,
+[data-bs-theme='dark'] .app-content-header h3,
+[data-bs-theme='dark'] .card-title,
+[data-bs-theme='dark'] .stat-value {
+    color: var(--simrs-ink);
+}
+
+[data-bs-theme='dark'] .stat-label,
+[data-bs-theme='dark'] .breadcrumb-item.active,
+[data-bs-theme='dark'] .app-header .nav-link {
+    color: var(--simrs-muted);
+}
+
+[data-bs-theme='dark'] .stat-link {
+    color: #2dd4bf;
+}
+
+[data-bs-theme='dark'] .stat-link:hover {
+    color: #5eead4;
+}
+
+[data-bs-theme='dark'] .page-link {
+    background-color: #151d2b;
+    border-color: #334155;
+    color: #2dd4bf;
+}
+
+[data-bs-theme='dark'] .page-item.active .page-link {
+    background: var(--simrs-teal);
+    border-color: var(--simrs-teal);
+    color: #fff;
+}
+
+[data-bs-theme='dark'] .alert-info {
+    background: rgba(13, 148, 136, 0.15);
+    color: #99f6e4;
+}
+
+[data-bs-theme='dark'] .login-form-panel {
+    background: #0f1722;
+}
+
+[data-bs-theme='dark'] .login-card {
+    background: #1c2536;
+    border-color: var(--simrs-border);
+}
+
+[data-bs-theme='dark'] .login-card h2 {
+    color: var(--simrs-ink);
+}
+
+[data-bs-theme='dark'] .login-hint {
+    background: rgba(20, 184, 166, 0.1);
+    border-color: rgba(94, 234, 212, 0.3);
+    color: #99f6e4;
+}
+
+[data-bs-theme='dark'] .login-hint code {
+    color: #5eead4;
+}

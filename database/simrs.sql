@@ -121,7 +121,18 @@ CREATE TABLE IF NOT EXISTS tagihan (
     CONSTRAINT fk_tagihan_daftar FOREIGN KEY (pendaftaran_id) REFERENCES pendaftaran(id)
 ) ENGINE=InnoDB;
 
+CREATE TABLE IF NOT EXISTS pengaturan (
+    kunci VARCHAR(50) PRIMARY KEY,
+    nilai TEXT NULL
+) ENGINE=InnoDB;
+
 -- ============================ SEED ============================
+
+INSERT INTO pengaturan (kunci, nilai) VALUES
+('nama_rs',    'RS Sehat Sentosa'),
+('alamat_rs',  'Jl. Kesehatan No. 1, Jakarta'),
+('telepon_rs', '(021) 123-4567')
+ON DUPLICATE KEY UPDATE kunci = kunci;
 
 -- password default: admin123 / petugas123 / dokter123
 INSERT INTO users (username, password, nama, role) VALUES

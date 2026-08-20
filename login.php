@@ -42,8 +42,10 @@ $logoSvg = '<svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/s
             <span class="brand-mark"><?= $logoSvg ?></span>
             <span class="brand-name">SIMRS</span>
         </div>
-        <h1>Sistem Informasi<br />Manajemen Rumah Sakit</h1>
+        <h1><?= e(nama_rs()) ?></h1>
+        <p class="brand-sub">Sistem Informasi Manajemen Rumah Sakit</p>
         <p class="lead">
+            <?= e(setting('alamat_rs')) ?> &middot; <?= e(setting('telepon_rs')) ?><br />
             Platform terpadu untuk mengelola pendaftaran pasien, pelayanan poli,
             rekam medis elektronik, farmasi, dan kasir dalam satu sistem yang aman.
         </p>

@@ -19,6 +19,7 @@ $routes = [
     'rekam-medis'  => 'rekam-medis/index.php',
     'billing'      => 'billing/index.php',
     'users'        => 'users/index.php',
+    'pengaturan'   => 'pengaturan/index.php',
     'profil'       => 'profil.php',
 ];
 
