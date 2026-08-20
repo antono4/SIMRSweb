@@ -42,9 +42,11 @@ function base_url(string $path = ''): string
     if ($base === null) {
         $script = $_SERVER['SCRIPT_NAME'] ?? '';
         $base = str_replace('\\', '/', dirname($script));
-        // Normalisasi: root menjadi kosong, bukan '/'
+        // Normalisasi: root menjadi kosong (bukan '/'), dan hapus trailing slash
         if ($base === '/' || $base === '.') {
             $base = '';
+        } else {
+            $base = rtrim($base, '/');
         }
     }
     return $base . '/' . ltrim($path, '/');
