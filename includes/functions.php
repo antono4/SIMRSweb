@@ -40,7 +40,10 @@ function base_url(string $path = ''): string
 {
     static $base = null;
     if ($base === null) {
-        $script = $_SERVER['SCRIPT_NAME'] ?? '';
+        // Deteksi base dari SCRIPT_NAME atau REQUEST_URI
+        $script = $_SERVER['SCRIPT_NAME'] ?? $_SERVER['REQUEST_URI'] ?? '';
+        // Hapus query string jika ada
+        $script = parse_url($script, PHP_URL_PATH) ?? $script;
         $base = str_replace('\\', '/', dirname($script));
         // Normalisasi: root menjadi kosong (bukan '/'), dan hapus trailing slash
         if ($base === '/' || $base === '.') {
