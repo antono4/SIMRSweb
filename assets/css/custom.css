@@ -1,0 +1,21 @@
+.login-page {
+    background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+}
+
+.login-logo a {
+    color: #fff;
+    text-decoration: none;
+}
+
+.table-actions form {
+    display: inline;
+}
+
+.card .table td,
+.card .table th {
+    vertical-align: middle;
+}
+
+.stat-icon {
+    font-size: 1.6rem;
+}
