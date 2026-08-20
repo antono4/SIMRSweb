@@ -53,7 +53,7 @@ $btn = function (int $id, string $status, string $ikon, string $warna, string $t
 require __DIR__ . '/../../includes/header.php';
 ?>
 <div class="d-flex justify-content-between align-items-center flex-wrap gap-2 mb-3">
-    <form method="get" action="<?php echo e(base_url("/")); ?>"index.php" class="d-flex gap-2">
+    <form method="get" action="<?= e(base_url("index.php")) ?>" class="d-flex gap-2">
         <input type="hidden" name="page" value="antrian" />
         <select name="poli_id" class="form-select form-select-sm" onchange="this.form.submit()">
             <option value="">Semua Poli</option>

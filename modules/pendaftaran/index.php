@@ -177,7 +177,7 @@ require __DIR__ . '/../../includes/header.php';
         <div class="d-flex justify-content-between align-items-center flex-wrap gap-2">
             <h3 class="card-title mb-0">Daftar Pendaftaran</h3>
             <div class="d-flex gap-2 flex-wrap">
-                <form method="get" action="<?php echo e(base_url("/")); ?>"index.php" class="d-flex gap-1">
+                <form method="get" action="<?= e(base_url("index.php")) ?>" class="d-flex gap-1">
                     <input type="hidden" name="page" value="pendaftaran" />
                     <select name="status" class="form-select form-select-sm" onchange="this.form.submit()">
                         <option value="">Semua Status</option>

@@ -30,10 +30,10 @@ $logoSvg = '<svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/s
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <title>Masuk | SIMRS</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="stylesheet" href="<?= e(base_url('/assets/vendor/fonts/plus-jakarta-sans.css')) ?>" />
-    <link rel="stylesheet" href="<?= e(base_url('/assets/vendor/bootstrap-icons/bootstrap-icons.min.css')) ?>" />
-    <link rel="stylesheet" href="<?= e(base_url('/assets/css/adminlte.min.css')) ?>" />
-    <link rel="stylesheet" href="<?= e(base_url('/assets/css/custom.css')) ?>" />
+    <link rel="stylesheet" href="<?= e(base_url('assets/vendor/fonts/plus-jakarta-sans.css')) ?>" />
+    <link rel="stylesheet" href="<?= e(base_url('assets/vendor/bootstrap-icons/bootstrap-icons.min.css')) ?>" />
+    <link rel="stylesheet" href="<?= e(base_url('assets/css/adminlte.min.css')) ?>" />
+    <link rel="stylesheet" href="<?= e(base_url('assets/css/custom.css')) ?>" />
 </head>
 <body class="login-page">
 <div class="login-wrap">
@@ -64,7 +64,7 @@ $logoSvg = '<svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/s
             <?php if ($error): ?>
                 <div class="alert alert-danger py-2"><?= e($error) ?></div>
             <?php endif; ?>
-            <form method="post" action="/login.php">
+            <form method="post" action="<?= e(base_url('login.php')) ?>">
                 <?= csrf_field() ?>
                 <div class="mb-3">
                     <label class="form-label" for="username">Username</label>

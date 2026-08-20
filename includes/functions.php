@@ -49,7 +49,9 @@ function base_url(string $path = ''): string
             $base = rtrim($base, '/');
         }
     }
-    return $base . '/' . ltrim($path, '/');
+    // Hapus leading slash dari path untuk menghindari double slash
+    $path = ltrim($path, '/');
+    return ($base === '') ? '/' . $path : $base . '/' . $path;
 }
 
 function url(string $page, array $params = []): string

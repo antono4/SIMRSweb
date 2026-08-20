@@ -106,7 +106,7 @@ require __DIR__ . '/../../includes/header.php';
 ?>
 <div class="card mb-3">
     <div class="card-body">
-        <form method="get" action="<?php echo e(base_url("/")); ?>"index.php" class="d-flex align-items-end gap-2 flex-wrap">
+        <form method="get" action="<?= e(base_url("index.php")) ?>" class="d-flex align-items-end gap-2 flex-wrap">
             <input type="hidden" name="page" value="laporan" />
             <div>
                 <label class="form-label mb-1">Dari Tanggal</label>
