@@ -11,9 +11,12 @@ Aplikasi web SIMRS berbasis **PHP 8 (native, tanpa framework)**, **MySQL/MariaDB
 | Data Dokter | CRUD, spesialisasi, jadwal praktek, status aktif |
 | Data Poli | CRUD poli/departemen |
 | Data Obat | CRUD, stok, harga, kadaluarsa, indikator stok menipis |
-| Pendaftaran | Registrasi kunjungan, no. registrasi otomatis, workflow status (menunggu → diperiksa → selesai) |
-| Rekam Medis | Tanda vital, anamnesa, diagnosis, tindakan, resep obat (stok berkurang otomatis, transaksi DB) |
+| Pendaftaran | Registrasi kunjungan, no. registrasi + nomor antrian otomatis per poli per hari |
+| Papan Antrian | Papan operator 4 kolom (menunggu → dipanggil → diperiksa → selesai) + **display antrian publik** (`/display-antrian.php`) untuk layar TV, auto-refresh 15 detik |
+| Rekam Medis | Tanda vital, anamnesa, diagnosis, tindakan, resep obat (stok berkurang otomatis, transaksi DB, tercatat di kartu stok) |
 | Billing / Kasir | Tagihan otomatis dari biaya konsultasi + tindakan + resep, pembayaran (Tunai/Transfer/BPJS/Asuransi), cetak invoice berkop RS |
+| Laporan | Kunjungan & pendapatan per hari, rekap per poli, obat terlaris, filter rentang tanggal, ekspor CSV, cetak |
+| Kartu Stok | Mutasi stok masuk (form) dan keluar (otomatis dari resep), riwayat per obat beserta petugas |
 | Manajemen User | CRUD user dengan role admin/petugas/dokter (khusus admin) |
 | Pengaturan RS | Ubah nama, alamat, dan telepon rumah sakit (khusus admin); tampil di sidebar, login, judul, footer, dan invoice |
 | Mode Siang/Malam | Saklar tema terang/gelap di header (default: siang), tersimpan per perangkat |

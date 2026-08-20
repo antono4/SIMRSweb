@@ -104,7 +104,7 @@ require __DIR__ . '/../../includes/header.php';
             <div class="stat-body">
                 <span class="stat-label">Antrian Menunggu</span>
                 <p class="stat-value"><?= $antrianMenunggu ?></p>
-                <a href="<?= e(url('pendaftaran', ['status' => 'menunggu'])) ?>" class="stat-link">Proses antrian <i class="bi bi-arrow-right"></i></a>
+                <a href="<?= e(url('antrian')) ?>" class="stat-link">Buka papan antrian <i class="bi bi-arrow-right"></i></a>
             </div>
         </div>
     </div>

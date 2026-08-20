@@ -52,6 +52,72 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['hapus'])) {
     redirect(url('obat'));
 }
 
+// ---------- STOK MASUK ----------
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['stok_masuk'])) {
+    verify_csrf();
+    $obatId  = (int) $_POST['obat_id'];
+    $jumlah  = (int) $_POST['jumlah'];
+    $ket     = trim((string) $_POST['keterangan']) ?: 'Penambahan stok';
+    if ($obatId && $jumlah > 0) {
+        $db->beginTransaction();
+        $db->prepare('UPDATE obat SET stok = stok + ? WHERE id = ?')->execute([$jumlah, $obatId]);
+        $db->prepare("INSERT INTO mutasi_stok (obat_id, tipe, jumlah, keterangan, user_id) VALUES (?, 'masuk', ?, ?, ?)")
+           ->execute([$obatId, $jumlah, $ket, current_user()['id']]);
+        $db->commit();
+        flash('success', "Stok bertambah $jumlah.");
+    } else {
+        flash('danger', 'Jumlah stok masuk tidak valid.');
+    }
+    redirect(url('obat'));
+}
+
+// ---------- KARTU STOK ----------
+if ($action === 'mutasi') {
+    $stmt = $db->prepare('SELECT * FROM obat WHERE id = ?');
+    $stmt->execute([(int) $_GET['id']]);
+    $obat = $stmt->fetch();
+    if (!$obat) {
+        flash('danger', 'Obat tidak ditemukan.');
+        redirect(url('obat'));
+    }
+    $mutasi = $db->prepare(
+        'SELECT m.*, u.nama AS user FROM mutasi_stok m LEFT JOIN users u ON u.id = m.user_id
+         WHERE m.obat_id = ? ORDER BY m.created_at DESC, m.id DESC LIMIT 100'
+    );
+    $mutasi->execute([(int) $obat['id']]);
+    $mutasiRows = $mutasi->fetchAll();
+
+    require __DIR__ . '/../../includes/header.php';
+    ?>
+    <div class="card">
+        <div class="card-header"><h3 class="card-title">Kartu Stok: <?= e($obat['nama']) ?> (stok saat ini: <b><?= (int) $obat['stok'] ?> <?= e($obat['satuan']) ?></b>)</h3></div>
+        <div class="card-body p-0">
+            <table class="table table-striped mb-0">
+                <thead><tr><th>Waktu</th><th>Tipe</th><th class="text-end">Jumlah</th><th>Keterangan</th><th>Referensi</th><th>Oleh</th></tr></thead>
+                <tbody>
+                    <?php foreach ($mutasiRows as $m): ?>
+                        <tr>
+                            <td><?= e(tgl($m['created_at'], true)) ?></td>
+                            <td><span class="badge text-bg-<?= $m['tipe'] === 'masuk' ? 'success' : 'danger' ?>"><?= $m['tipe'] === 'masuk' ? 'Masuk' : 'Keluar' ?></span></td>
+                            <td class="text-end"><?= $m['tipe'] === 'masuk' ? '+' : '-' ?><?= (int) $m['jumlah'] ?></td>
+                            <td><?= e($m['keterangan'] ?: '-') ?></td>
+                            <td><?= e($m['referensi'] ?: '-') ?></td>
+                            <td><?= e($m['user'] ?: '-') ?></td>
+                        </tr>
+                    <?php endforeach; ?>
+                    <?php if (!$mutasiRows): ?>
+                        <tr><td colspan="6" class="text-center text-muted py-4">Belum ada mutasi stok.</td></tr>
+                    <?php endif; ?>
+                </tbody>
+            </table>
+        </div>
+        <div class="card-footer"><a href="<?= e(url('obat')) ?>" class="btn btn-secondary">Kembali</a></div>
+    </div>
+    <?php
+    require __DIR__ . '/../../includes/footer.php';
+    return;
+}
+
 if ($action === 'create' || $action === 'edit') {
     $row = ['id' => 0, 'kode' => '', 'nama' => '', 'satuan' => 'tablet', 'stok' => 0, 'harga' => 0, 'kadaluarsa' => ''];
     if ($action === 'edit') {
@@ -160,10 +226,16 @@ require __DIR__ . '/../../includes/header.php';
                         <td class="text-end"><?= e(rupiah($r['harga'])) ?></td>
                         <td><?= e(tgl($r['kadaluarsa'])) ?></td>
                         <td class="table-actions">
-                            <a href="<?= e(url('obat', ['action' => 'edit', 'id' => $r['id']])) ?>" class="btn btn-sm btn-outline-primary"><i class="bi bi-pencil"></i></a>
+                            <button type="button" class="btn btn-sm btn-outline-success" title="Stok Masuk"
+                                    data-bs-toggle="modal" data-bs-target="#modalStok"
+                                    data-id="<?= (int) $r['id'] ?>" data-nama="<?= e($r['nama']) ?>">
+                                <i class="bi bi-box-arrow-in-down"></i>
+                            </button>
+                            <a href="<?= e(url('obat', ['action' => 'mutasi', 'id' => $r['id']])) ?>" class="btn btn-sm btn-outline-info" title="Kartu Stok"><i class="bi bi-arrow-left-right"></i></a>
+                            <a href="<?= e(url('obat', ['action' => 'edit', 'id' => $r['id']])) ?>" class="btn btn-sm btn-outline-primary" title="Ubah"><i class="bi bi-pencil"></i></a>
                             <form method="post" action="<?= e(url('obat')) ?>" onsubmit="return confirm('Hapus obat <?= e($r['nama']) ?>?')">
                                 <?= csrf_field() ?>
-                                <button type="submit" name="hapus" value="<?= (int) $r['id'] ?>" class="btn btn-sm btn-outline-danger"><i class="bi bi-trash"></i></button>
+                                <button type="submit" name="hapus" value="<?= (int) $r['id'] ?>" class="btn btn-sm btn-outline-danger" title="Hapus"><i class="bi bi-trash"></i></button>
                             </form>
                         </td>
                     </tr>
@@ -179,4 +251,38 @@ require __DIR__ . '/../../includes/header.php';
         <?= render_pagination('obat', $pg, ['q' => $q]) ?>
     </div>
 </div>
+
+<div class="modal fade" id="modalStok" tabindex="-1">
+    <div class="modal-dialog">
+        <form method="post" action="<?= e(url('obat')) ?>" class="modal-content">
+            <?= csrf_field() ?>
+            <input type="hidden" name="obat_id" id="stok-obat-id" />
+            <div class="modal-header">
+                <h5 class="modal-title">Stok Masuk — <span id="stok-obat-nama"></span></h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <div class="mb-3">
+                    <label class="form-label">Jumlah Masuk</label>
+                    <input type="number" name="jumlah" class="form-control" min="1" value="1" required />
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Keterangan</label>
+                    <input type="text" name="keterangan" class="form-control" placeholder="Contoh: Pembelian dari distributor" />
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
+                <button type="submit" name="stok_masuk" value="1" class="btn btn-success"><i class="bi bi-plus-lg"></i> Tambah Stok</button>
+            </div>
+        </form>
+    </div>
+</div>
+<script>
+    document.getElementById('modalStok').addEventListener('show.bs.modal', function (e) {
+        const btn = e.relatedTarget;
+        document.getElementById('stok-obat-id').value = btn.dataset.id;
+        document.getElementById('stok-obat-nama').textContent = btn.dataset.nama;
+    });
+</script>
 <?php require __DIR__ . '/../../includes/footer.php'; ?>

@@ -107,6 +107,7 @@ function status_badge(string $status): string
 {
     $map = [
         'menunggu'  => ['Menunggu', 'warning'],
+        'dipanggil' => ['Dipanggil', 'primary'],
         'diperiksa' => ['Diperiksa', 'info'],
         'selesai'   => ['Selesai', 'success'],
         'batal'     => ['Batal', 'danger'],
@@ -125,6 +126,22 @@ function next_number(string $table, string $column, string $prefix, int $width =
     $last = $stmt->fetchColumn();
     $seq = $last ? ((int) substr((string) $last, strlen($prefix))) + 1 : 1;
     return $prefix . str_pad((string) $seq, $width, '0', STR_PAD_LEFT);
+}
+
+// Nomor antrian berikutnya untuk poli pada tanggal tertentu, mis. UMU-003
+function next_queue_number(int $poliId, string $tanggal): string
+{
+    $stmt = db()->prepare(
+        'SELECT COUNT(*) FROM pendaftaran WHERE poli_id = ? AND DATE(tanggal) = ?'
+    );
+    $stmt->execute([$poliId, $tanggal]);
+    $seq = (int) $stmt->fetchColumn() + 1;
+
+    $kode = db()->prepare('SELECT kode FROM poli WHERE id = ?');
+    $kode->execute([$poliId]);
+    $prefix = (string) ($kode->fetchColumn() ?: 'POL');
+
+    return $prefix . '-' . str_pad((string) $seq, 3, '0', STR_PAD_LEFT);
 }
 
 function paginate(int $total, int $perPage, int $page): array

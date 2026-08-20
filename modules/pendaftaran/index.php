@@ -20,11 +20,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['simpan'])) {
     }
 
     $noReg = next_number('pendaftaran', 'no_registrasi', 'REG-' . date('Ymd') . '-', 4);
+    $noAntrian = next_queue_number($poliId, date('Y-m-d'));
     $db->prepare(
-        'INSERT INTO pendaftaran (no_registrasi, pasien_id, poli_id, dokter_id, keluhan) VALUES (?,?,?,?,?)'
-    )->execute([$noReg, $pasienId, $poliId, $dokterId, $keluhan]);
+        'INSERT INTO pendaftaran (no_registrasi, no_antrian, pasien_id, poli_id, dokter_id, keluhan) VALUES (?,?,?,?,?,?)'
+    )->execute([$noReg, $noAntrian, $pasienId, $poliId, $dokterId, $keluhan]);
 
-    flash('success', "Pendaftaran berhasil dengan No. Registrasi $noReg.");
+    flash('success', "Pendaftaran berhasil. No. Registrasi $noReg, Nomor Antrian $noAntrian.");
     redirect(url('pendaftaran'));
 }
 
@@ -33,11 +34,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['set_status'])) {
     verify_csrf();
     $id = (int) $_POST['set_status'];
     $status = (string) $_POST['status'];
-    if (in_array($status, ['menunggu', 'diperiksa', 'selesai', 'batal'], true)) {
-        $db->prepare('UPDATE pendaftaran SET status = ? WHERE id = ?')->execute([$status, $id]);
-        flash('success', 'Status pendaftaran diperbarui.');
+    $kembali = $_POST['kembali'] ?? 'pendaftaran';
+    if (in_array($status, ['menunggu', 'dipanggil', 'diperiksa', 'selesai', 'batal'], true)) {
+        if ($status === 'dipanggil') {
+            $db->prepare('UPDATE pendaftaran SET status = ?, dipanggil_pada = NOW() WHERE id = ?')->execute([$status, $id]);
+        } else {
+            $db->prepare('UPDATE pendaftaran SET status = ? WHERE id = ?')->execute([$status, $id]);
+        }
+        $label = ['dipanggil' => 'dipanggil', 'diperiksa' => 'masuk ruang periksa', 'selesai' => 'selesai', 'batal' => 'dibatalkan'][$status] ?? 'diperbarui';
+        flash('success', "Antrian $label.");
     }
-    redirect(url('pendaftaran'));
+    redirect($kembali === 'antrian' ? url('antrian') : url('pendaftaran'));
 }
 
 // ---------- HAPUS ----------
@@ -134,7 +141,7 @@ $filterStatus = $_GET['status'] ?? '';
 $q = trim((string) ($_GET['q'] ?? ''));
 $where = [];
 $params = [];
-if ($filterStatus !== '' && in_array($filterStatus, ['menunggu', 'diperiksa', 'selesai', 'batal'], true)) {
+if ($filterStatus !== '' && in_array($filterStatus, ['menunggu', 'dipanggil', 'diperiksa', 'selesai', 'batal'], true)) {
     $where[] = 'r.status = ?';
     $params[] = $filterStatus;
 }
@@ -174,7 +181,7 @@ require __DIR__ . '/../../includes/header.php';
                     <input type="hidden" name="page" value="pendaftaran" />
                     <select name="status" class="form-select form-select-sm" onchange="this.form.submit()">
                         <option value="">Semua Status</option>
-                        <?php foreach (['menunggu' => 'Menunggu', 'diperiksa' => 'Diperiksa', 'selesai' => 'Selesai', 'batal' => 'Batal'] as $k => $v): ?>
+                        <?php foreach (['menunggu' => 'Menunggu', 'dipanggil' => 'Dipanggil', 'diperiksa' => 'Diperiksa', 'selesai' => 'Selesai', 'batal' => 'Batal'] as $k => $v): ?>
                             <option value="<?= $k ?>" <?= $filterStatus === $k ? 'selected' : '' ?>><?= $v ?></option>
                         <?php endforeach; ?>
                     </select>
@@ -188,11 +195,12 @@ require __DIR__ . '/../../includes/header.php';
     <div class="card-body p-0 table-responsive">
         <table class="table table-striped table-hover mb-0">
             <thead>
-                <tr><th>No. Registrasi</th><th>Pasien</th><th>Poli</th><th>Dokter</th><th>Tanggal</th><th>Keluhan</th><th>Status</th><th style="width:200px">Aksi</th></tr>
+                <tr><th>Antrian</th><th>No. Registrasi</th><th>Pasien</th><th>Poli</th><th>Dokter</th><th>Tanggal</th><th>Keluhan</th><th>Status</th><th style="width:190px">Aksi</th></tr>
             </thead>
             <tbody>
                 <?php foreach ($rows as $r): ?>
                     <tr>
+                        <td><span class="badge text-bg-dark fs-6"><?= e($r['no_antrian'] ?: '-') ?></span></td>
                         <td><b><?= e($r['no_registrasi']) ?></b></td>
                         <td><?= e($r['no_rm'] . ' - ' . $r['pasien']) ?></td>
                         <td><?= e($r['poli']) ?></td>
@@ -204,11 +212,18 @@ require __DIR__ . '/../../includes/header.php';
                             <?php if ($r['status'] === 'menunggu'): ?>
                                 <form method="post" action="<?= e(url('pendaftaran')) ?>">
                                     <?= csrf_field() ?>
+                                    <input type="hidden" name="status" value="dipanggil" />
+                                    <button name="set_status" value="<?= (int) $r['id'] ?>" class="btn btn-sm btn-outline-warning" title="Panggil"><i class="bi bi-megaphone"></i></button>
+                                </form>
+                            <?php endif; ?>
+                            <?php if ($r['status'] === 'dipanggil'): ?>
+                                <form method="post" action="<?= e(url('pendaftaran')) ?>">
+                                    <?= csrf_field() ?>
                                     <input type="hidden" name="status" value="diperiksa" />
                                     <button name="set_status" value="<?= (int) $r['id'] ?>" class="btn btn-sm btn-outline-info" title="Mulai periksa"><i class="bi bi-play-circle"></i></button>
                                 </form>
                             <?php endif; ?>
-                            <?php if (in_array($r['status'], ['menunggu', 'diperiksa'], true)): ?>
+                            <?php if (in_array($r['status'], ['dipanggil', 'diperiksa'], true)): ?>
                                 <form method="post" action="<?= e(url('pendaftaran')) ?>">
                                     <?= csrf_field() ?>
                                     <input type="hidden" name="status" value="selesai" />
@@ -229,7 +244,7 @@ require __DIR__ . '/../../includes/header.php';
                     </tr>
                 <?php endforeach; ?>
                 <?php if (!$rows): ?>
-                    <tr><td colspan="8" class="text-center text-muted py-4">Tidak ada data pendaftaran.</td></tr>
+                    <tr><td colspan="9" class="text-center text-muted py-4">Tidak ada data pendaftaran.</td></tr>
                 <?php endif; ?>
             </tbody>
         </table>

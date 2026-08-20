@@ -9,10 +9,15 @@ $menu = [
     ['page' => 'obat',         'icon' => 'bi-capsule',        'label' => 'Data Obat'],
     ['group' => 'PELAYANAN'],
     ['page' => 'pendaftaran',  'icon' => 'bi-clipboard-plus', 'label' => 'Pendaftaran'],
+    ['page' => 'antrian',      'icon' => 'bi-megaphone',      'label' => 'Papan Antrian'],
     ['page' => 'rekam-medis',  'icon' => 'bi-file-medical',   'label' => 'Rekam Medis'],
     ['group' => 'KEUANGAN'],
     ['page' => 'billing',      'icon' => 'bi-receipt',        'label' => 'Billing / Kasir'],
 ];
+if (in_array($user['role'] ?? '', ['admin', 'petugas'], true)) {
+    $menu[] = ['group' => 'LAPORAN'];
+    $menu[] = ['page' => 'laporan', 'icon' => 'bi-bar-chart-line', 'label' => 'Laporan'];
+}
 if (($user['role'] ?? '') === 'admin') {
     $menu[] = ['group' => 'SISTEM'];
     $menu[] = ['page' => 'users', 'icon' => 'bi-person-gear', 'label' => 'Manajemen User'];

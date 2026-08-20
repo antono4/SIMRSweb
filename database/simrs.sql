@@ -63,16 +63,32 @@ CREATE TABLE IF NOT EXISTS obat (
 CREATE TABLE IF NOT EXISTS pendaftaran (
     id            INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
     no_registrasi VARCHAR(20) NOT NULL UNIQUE,
+    no_antrian    VARCHAR(12) NULL COMMENT 'Contoh: UMU-001 (per poli per hari)',
     pasien_id     INT UNSIGNED NOT NULL,
     poli_id       INT UNSIGNED NOT NULL,
     dokter_id     INT UNSIGNED NULL,
     tanggal       DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
     keluhan       TEXT NULL,
-    status        ENUM('menunggu','diperiksa','selesai','batal') NOT NULL DEFAULT 'menunggu',
+    status        ENUM('menunggu','dipanggil','diperiksa','selesai','batal') NOT NULL DEFAULT 'menunggu',
+    dipanggil_pada DATETIME NULL,
     CONSTRAINT fk_daftar_pasien FOREIGN KEY (pasien_id) REFERENCES pasien(id),
     CONSTRAINT fk_daftar_poli   FOREIGN KEY (poli_id)   REFERENCES poli(id),
     CONSTRAINT fk_daftar_dokter FOREIGN KEY (dokter_id) REFERENCES dokter(id) ON DELETE SET NULL,
     INDEX idx_daftar_tanggal (tanggal)
+) ENGINE=InnoDB;
+
+CREATE TABLE IF NOT EXISTS mutasi_stok (
+    id          INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+    obat_id     INT UNSIGNED NOT NULL,
+    tipe        ENUM('masuk','keluar') NOT NULL,
+    jumlah      INT NOT NULL,
+    keterangan  VARCHAR(200) NULL,
+    referensi   VARCHAR(30) NULL,
+    user_id     INT UNSIGNED NULL,
+    created_at  TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    CONSTRAINT fk_mutasi_obat FOREIGN KEY (obat_id) REFERENCES obat(id),
+    CONSTRAINT fk_mutasi_user FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE SET NULL,
+    INDEX idx_mutasi_obat (obat_id, created_at)
 ) ENGINE=InnoDB;
 
 CREATE TABLE IF NOT EXISTS rekam_medis (
@@ -174,10 +190,10 @@ INSERT INTO obat (kode, nama, satuan, stok, harga, kadaluarsa) VALUES
 ('OBT-007', 'Betadine 10ml',           'botol',  60,   12000, '2027-09-30'),
 ('OBT-008', 'Salbutamol Inhaler',      'inhaler',40,   55000, '2026-11-30');
 
-INSERT INTO pendaftaran (no_registrasi, pasien_id, poli_id, dokter_id, tanggal, keluhan, status) VALUES
-('REG-20260820-0001', 1, 1, 1, NOW() - INTERVAL 2 DAY, 'Demam dan batuk sejak 3 hari', 'selesai'),
-('REG-20260820-0002', 2, 3, 5, NOW() - INTERVAL 1 DAY, 'Anak tidak nafsu makan',        'selesai'),
-('REG-20260820-0003', 3, 5, 3, NOW(),                  'Nyeri ulu hati berulang',       'diperiksa'),
-('REG-20260820-0004', 4, 1, 1, NOW(),                  'Sakit kepala dan mual',         'menunggu'),
-('REG-20260820-0005', 5, 2, 2, NOW(),                  'Gigi berlubang nyeri',          'menunggu');
+INSERT INTO pendaftaran (no_registrasi, no_antrian, pasien_id, poli_id, dokter_id, tanggal, keluhan, status) VALUES
+('REG-20260820-0001', 'UMU-001', 1, 1, 1, NOW() - INTERVAL 2 DAY, 'Demam dan batuk sejak 3 hari', 'selesai'),
+('REG-20260820-0002', 'ANA-001', 2, 3, 5, NOW() - INTERVAL 1 DAY, 'Anak tidak nafsu makan',        'selesai'),
+('REG-20260820-0003', 'DAL-001', 3, 5, 3, NOW(),                  'Nyeri ulu hati berulang',       'diperiksa'),
+('REG-20260820-0004', 'UMU-001', 4, 1, 1, NOW(),                  'Sakit kepala dan mual',         'menunggu'),
+('REG-20260820-0005', 'GIG-001', 5, 2, 2, NOW(),                  'Gigi berlubang nyeri',          'menunggu');
 

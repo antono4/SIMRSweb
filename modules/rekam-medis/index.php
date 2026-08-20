@@ -69,6 +69,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['simpan'])) {
             $db->prepare('UPDATE obat SET stok = stok - ? WHERE id = ?')->execute([$jumlah, $obatId]);
             $db->prepare('INSERT INTO resep (rekam_medis_id, obat_id, jumlah, aturan_pakai) VALUES (?,?,?,?)')
                ->execute([$rmId, $obatId, $jumlah, trim((string) ($aturans[$i] ?? '')) ?: null]);
+            $db->prepare("INSERT INTO mutasi_stok (obat_id, tipe, jumlah, keterangan, referensi, user_id) VALUES (?, 'keluar', ?, ?, ?, ?)")
+               ->execute([$obatId, $jumlah, 'Resep untuk ' . $reg['no_registrasi'], 'RM-' . $rmId, current_user()['id'] ?? null]);
         }
 
         $db->prepare("UPDATE pendaftaran SET status = 'selesai' WHERE id = ?")->execute([$pendaftaranId]);
