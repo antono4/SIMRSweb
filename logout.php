@@ -8,4 +8,4 @@ require __DIR__ . '/includes/functions.php';
 require __DIR__ . '/includes/auth.php';
 
 logout();
-redirect('/login.php');
+redirect(base_url('login.php'));

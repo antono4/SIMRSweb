@@ -8,7 +8,7 @@ require __DIR__ . '/includes/functions.php';
 require __DIR__ . '/includes/auth.php';
 
 if (current_user()) {
-    redirect('/index.php');
+    redirect(base_url('index.php'));
 }
 
 $error = null;
@@ -17,7 +17,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $username = trim((string) ($_POST['username'] ?? ''));
     $password = (string) ($_POST['password'] ?? '');
     if (attempt_login($username, $password)) {
-        redirect('/index.php');
+        redirect(base_url('index.php'));
     }
     $error = 'Username atau password salah.';
 }
