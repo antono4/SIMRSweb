@@ -50,6 +50,15 @@ $terbaru = $db->query(
 // Stok obat menipis
 $stokTipis = $db->query('SELECT kode, nama, stok, satuan FROM obat WHERE stok < 100 ORDER BY stok ASC LIMIT 5')->fetchAll();
 
+// Obat mendekati kadaluarsa (90 hari) atau sudah kadaluarsa
+$kadaluarsa = $db->query(
+    "SELECT kode, nama, kadaluarsa,
+            kadaluarsa < CURDATE() AS sudah_lewat
+     FROM obat
+     WHERE kadaluarsa IS NOT NULL AND kadaluarsa <= CURDATE() + INTERVAL 90 DAY
+     ORDER BY kadaluarsa ASC LIMIT 5"
+)->fetchAll();
+
 $extraJs = '<script src="/assets/vendor/apexcharts/apexcharts.min.js"></script>
 <script>
 const chart = new ApexCharts(document.querySelector("#chart-kunjungan"), {
@@ -186,6 +195,30 @@ require __DIR__ . '/../../includes/header.php';
                         <?php endforeach; ?>
                         <?php if (!$stokTipis): ?>
                             <tr><td colspan="2" class="text-center text-muted">Stok aman</td></tr>
+                        <?php endif; ?>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div class="card mb-4">
+            <div class="card-header"><h3 class="card-title">Peringatan Kadaluarsa Obat</h3></div>
+            <div class="card-body p-0">
+                <table class="table mb-0">
+                    <thead><tr><th>Obat</th><th class="text-end">Kadaluarsa</th></tr></thead>
+                    <tbody>
+                        <?php foreach ($kadaluarsa as $o): ?>
+                            <tr>
+                                <td><?= e($o['nama']) ?></td>
+                                <td class="text-end">
+                                    <span class="badge text-bg-<?= $o['sudah_lewat'] ? 'danger' : 'warning' ?>">
+                                        <?= $o['sudah_lewat'] ? 'Sudah lewat: ' : '' ?><?= e(tgl($o['kadaluarsa'])) ?>
+                                    </span>
+                                </td>
+                            </tr>
+                        <?php endforeach; ?>
+                        <?php if (!$kadaluarsa): ?>
+                            <tr><td colspan="2" class="text-center text-muted">Tidak ada obat mendekati kadaluarsa.</td></tr>
                         <?php endif; ?>
                     </tbody>
                 </table>

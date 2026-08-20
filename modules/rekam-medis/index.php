@@ -85,6 +85,32 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['simpan'])) {
     redirect(url('rekam-medis', ['action' => 'detail', 'id' => $rmId ?? 0]));
 }
 
+// ---------- BUAT SURAT KETERANGAN ----------
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['buat_surat'])) {
+    verify_csrf();
+    $rmId  = (int) $_POST['rekam_medis_id'];
+    $jenis = in_array($_POST['jenis'] ?? '', ['sakit', 'rujukan'], true) ? $_POST['jenis'] : 'sakit';
+
+    $isi = '';
+    if ($jenis === 'sakit') {
+        $hari = max(1, (int) ($_POST['istirahat_hari'] ?? 1));
+        $isi = 'Istirahat sakit selama ' . $hari . ' hari, terhitung mulai ' . tgl(date('Y-m-d')) . '.';
+    } else {
+        $tujuan = trim((string) ($_POST['rujukan_tujuan'] ?? ''));
+        if ($tujuan === '') {
+            flash('danger', 'Tujuan rujukan wajib diisi.');
+            redirect(url('rekam-medis', ['action' => 'detail', 'id' => $rmId]));
+        }
+        $isi = 'Dirujuk ke ' . $tujuan . ' untuk pemeriksaan/penanganan lebih lanjut.';
+    }
+
+    $noSurat = next_number('surat_keterangan', 'no_surat', 'SK-' . date('Ymd') . '-', 3);
+    $db->prepare('INSERT INTO surat_keterangan (no_surat, rekam_medis_id, jenis, isi) VALUES (?,?,?,?)')
+       ->execute([$noSurat, $rmId, $jenis, $isi]);
+
+    redirect(url('surat', ['action' => 'cetak', 'id' => (int) $db->lastInsertId()]));
+}
+
 // ---------- FORM CREATE ----------
 if ($action === 'create') {
     $pendaftaranId = (int) ($_GET['pendaftaran_id'] ?? 0);
@@ -105,6 +131,7 @@ if ($action === 'create') {
     }
 
     $obatList = $db->query('SELECT id, kode, nama, satuan, stok, harga FROM obat WHERE stok > 0 ORDER BY nama')->fetchAll();
+    $tindakanList = $db->query('SELECT id, nama, tarif FROM tindakan ORDER BY nama')->fetchAll();
 
     require __DIR__ . '/../../includes/header.php';
     ?>
@@ -161,13 +188,16 @@ if ($action === 'create') {
                     </div>
                     <div class="col-md-4 mb-3">
                         <label class="form-label">Biaya Tindakan (Rp)</label>
-                        <input type="number" name="biaya_tindakan" class="form-control" min="0" step="1000" value="0" />
+                        <input type="number" name="biaya_tindakan" id="biaya_tindakan" class="form-control" min="0" step="1000" value="0" />
+                        <div class="form-text">Terisi otomatis dari tindakan yang dipilih (bisa diubah manual).</div>
                     </div>
                 </div>
                 <div class="row">
                     <div class="col-md-8 mb-3">
-                        <label class="form-label">Tindakan</label>
-                        <textarea name="tindakan" class="form-control" rows="2"></textarea>
+                        <label class="form-label">Tindakan <small class="text-muted">(pilih dari master tarif)</small></label>
+                        <div id="daftar-tindakan"></div>
+                        <button type="button" class="btn btn-sm btn-outline-primary mt-1" onclick="tambahTindakan()"><i class="bi bi-plus-lg"></i> Tambah Tindakan</button>
+                        <textarea name="tindakan" id="tindakan_teks" class="form-control mt-2" rows="1" style="display:none"></textarea>
                     </div>
                     <div class="col-md-4 mb-3">
                         <label class="form-label">Catatan</label>
@@ -213,12 +243,50 @@ if ($action === 'create') {
             <td><button type="button" class="btn btn-sm btn-outline-danger" onclick="this.closest('tr').remove()"><i class="bi bi-x"></i></button></td>
         </tr>
     </template>
+    <template id="tpl-tindakan">
+        <div class="input-group input-group-sm mb-1 baris-tindakan">
+            <select class="form-select pilih-tindakan">
+                <option value="">- Pilih Tindakan -</option>
+                <?php foreach ($tindakanList as $t): ?>
+                    <option value="<?= (int) $t['id'] ?>" data-nama="<?= e($t['nama']) ?>" data-tarif="<?= (int) $t['tarif'] ?>">
+                        <?= e($t['nama'] . ' — ' . rupiah($t['tarif'])) ?>
+                    </option>
+                <?php endforeach; ?>
+            </select>
+            <button type="button" class="btn btn-outline-danger" onclick="this.closest('.baris-tindakan').remove(); hitungTindakan();"><i class="bi bi-x"></i></button>
+        </div>
+    </template>
     <script>
         function tambahBaris() {
             const tpl = document.getElementById('tpl-baris');
             document.querySelector('#tabel-resep tbody').appendChild(tpl.content.cloneNode(true));
         }
         tambahBaris();
+
+        const tplTindakan = document.getElementById('tpl-tindakan');
+        const wadahTindakan = document.getElementById('daftar-tindakan');
+
+        function tambahTindakan() {
+            const node = tplTindakan.content.cloneNode(true);
+            node.querySelector('.pilih-tindakan').addEventListener('change', hitungTindakan);
+            wadahTindakan.appendChild(node);
+        }
+
+        function hitungTindakan() {
+            let total = 0;
+            const nama = [];
+            wadahTindakan.querySelectorAll('.pilih-tindakan').forEach(function (sel) {
+                const opt = sel.selectedOptions[0];
+                if (opt && opt.value) {
+                    total += parseFloat(opt.dataset.tarif) || 0;
+                    nama.push(opt.dataset.nama);
+                }
+            });
+            document.getElementById('biaya_tindakan').value = total;
+            document.getElementById('tindakan_teks').value = nama.join('; ');
+        }
+
+        tambahTindakan();
     </script>
     <?php
     require __DIR__ . '/../../includes/footer.php';
@@ -254,9 +322,14 @@ if ($action === 'detail') {
     <div class="card mb-3">
         <div class="card-header d-flex justify-content-between align-items-center">
             <h3 class="card-title mb-0">Rekam Medis <?= e($rm['no_registrasi']) ?></h3>
-            <a href="<?= e(url('billing', ['action' => 'buat', 'pendaftaran_id' => $rm['pendaftaran_id']])) ?>" class="btn btn-sm btn-success">
-                <i class="bi bi-receipt"></i> Buat Tagihan
-            </a>
+            <div class="d-flex gap-1">
+                <button type="button" class="btn btn-sm btn-outline-primary" data-bs-toggle="modal" data-bs-target="#modalSurat">
+                    <i class="bi bi-file-earmark-text"></i> Buat Surat
+                </button>
+                <a href="<?= e(url('billing', ['action' => 'buat', 'pendaftaran_id' => $rm['pendaftaran_id']])) ?>" class="btn btn-sm btn-success">
+                    <i class="bi bi-receipt"></i> Buat Tagihan
+                </a>
+            </div>
         </div>
         <div class="card-body">
             <div class="row mb-3">
@@ -305,6 +378,46 @@ if ($action === 'detail') {
             <a href="<?= e(url('rekam-medis')) ?>" class="btn btn-secondary">Kembali</a>
         </div>
     </div>
+
+    <div class="modal fade" id="modalSurat" tabindex="-1">
+        <div class="modal-dialog">
+            <form method="post" action="<?= e(url('rekam-medis')) ?>" class="modal-content">
+                <?= csrf_field() ?>
+                <input type="hidden" name="rekam_medis_id" value="<?= (int) $rm['id'] ?>" />
+                <div class="modal-header">
+                    <h5 class="modal-title">Buat Surat Keterangan</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label class="form-label">Jenis Surat</label>
+                        <select name="jenis" id="surat-jenis" class="form-select">
+                            <option value="sakit">Surat Keterangan Sakit (istirahat)</option>
+                            <option value="rujukan">Surat Rujukan</option>
+                        </select>
+                    </div>
+                    <div class="mb-3" id="wrap-istirahat">
+                        <label class="form-label">Istirahat (hari)</label>
+                        <input type="number" name="istirahat_hari" class="form-control" min="1" value="1" />
+                    </div>
+                    <div class="mb-3" id="wrap-rujukan" style="display:none">
+                        <label class="form-label">Tujuan Rujukan</label>
+                        <input type="text" name="rujukan_tujuan" class="form-control" placeholder="Contoh: RSUP Dr. Sardjito — Poli Jantung" />
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
+                    <button type="submit" name="buat_surat" value="1" class="btn btn-primary"><i class="bi bi-printer"></i> Buat & Cetak</button>
+                </div>
+            </form>
+        </div>
+    </div>
+    <script>
+        document.getElementById('surat-jenis').addEventListener('change', function () {
+            document.getElementById('wrap-istirahat').style.display = this.value === 'sakit' ? '' : 'none';
+            document.getElementById('wrap-rujukan').style.display = this.value === 'rujukan' ? '' : 'none';
+        });
+    </script>
     <?php
     require __DIR__ . '/../../includes/footer.php';
     return;

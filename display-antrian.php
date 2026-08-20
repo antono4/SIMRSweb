@@ -104,6 +104,13 @@ $utama = $dipanggil[0] ?? null;
         .strip-poli b { font-size: 1.25rem; color: #5eead4; }
         .blink { animation: blink 1.6s ease-in-out infinite; }
         @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0.35; } }
+        .sound-btn {
+            position: fixed; right: 18px; bottom: 18px; z-index: 10;
+            border: 1px solid rgba(45,212,191,0.4); background: rgba(20,184,166,0.15);
+            color: #5eead4; border-radius: 999px; padding: 0.55rem 1.1rem;
+            font-family: inherit; font-weight: 700; font-size: 0.85rem; cursor: pointer;
+        }
+        .sound-btn.on { background: #0d9488; color: #fff; }
     </style>
 </head>
 <body>
@@ -114,6 +121,7 @@ $utama = $dipanggil[0] ?? null;
         </div>
         <div class="display-clock" id="jam">--:--:--</div>
     </div>
+    <button class="sound-btn" id="soundBtn" type="button"><i class="bi bi-volume-mute"></i> Suara Panggilan: Mati</button>
 
     <div class="container-fluid px-4 pb-4">
         <div class="row g-4 mt-0">
@@ -159,6 +167,47 @@ $utama = $dipanggil[0] ?? null;
             document.getElementById('jam').textContent = d.toLocaleTimeString('id-ID', { hour12: false });
         }
         jam(); setInterval(jam, 1000);
+
+        // ---- Suara panggilan (text-to-speech) ----
+        const NOMOR_SAAT_INI = <?= json_encode($utama['no_antrian'] ?? null) ?>;
+        const POLI_SAAT_INI  = <?= json_encode($utama['poli'] ?? null) ?>;
+
+        let suaraAktif = false;
+        try { suaraAktif = localStorage.getItem('antrian-suara') === '1'; } catch (e) {}
+
+        const btn = document.getElementById('soundBtn');
+        function tampilTombol() {
+            btn.classList.toggle('on', suaraAktif);
+            btn.innerHTML = suaraAktif
+                ? '<i class="bi bi-volume-up"></i> Suara Panggilan: Aktif'
+                : '<i class="bi bi-volume-mute"></i> Suara Panggilan: Mati';
+        }
+        btn.addEventListener('click', function () {
+            suaraAktif = !suaraAktif;
+            try { localStorage.setItem('antrian-suara', suaraAktif ? '1' : '0'); } catch (e) {}
+            tampilTombol();
+            if (suaraAktif && NOMOR_SAAT_INI) panggil(NOMOR_SAAT_INI, POLI_SAAT_INI);
+        });
+        tampilTombol();
+
+        function panggil(nomor, poli) {
+            if (!('speechSynthesis' in window)) return;
+            const teks = 'Nomor antrian ' + nomor.split('').join(' ') + ', silakan menuju ' + poli + '.';
+            const u = new SpeechSynthesisUtterance(teks);
+            u.lang = 'id-ID';
+            u.rate = 0.92;
+            speechSynthesis.speak(u);
+        }
+
+        // Ucapkan nomor yang sedang dipanggil jika nomor berubah sejak load terakhir
+        if (suaraAktif && NOMOR_SAAT_INI) {
+            let terakhir = null;
+            try { terakhir = sessionStorage.getItem('antrian-terakhir'); } catch (e) {}
+            if (terakhir !== NOMOR_SAAT_INI) {
+                try { sessionStorage.setItem('antrian-terakhir', NOMOR_SAAT_INI); } catch (e) {}
+                panggil(NOMOR_SAAT_INI, POLI_SAAT_INI);
+            }
+        }
     </script>
 </body>
 </html>

@@ -10,10 +10,13 @@ Aplikasi web SIMRS berbasis **PHP 8 (native, tanpa framework)**, **MySQL/MariaDB
 | Data Pasien | CRUD, No. RM otomatis, pencarian, riwayat rekam medis |
 | Data Dokter | CRUD, spesialisasi, jadwal praktek, status aktif |
 | Data Poli | CRUD poli/departemen |
-| Data Obat | CRUD, stok, harga, kadaluarsa, indikator stok menipis |
+| Data Obat | CRUD, stok, harga, kadaluarsa (badge peringatan 90 hari), indikator stok menipis |
+| Tarif Tindakan | Master kode/nama/tarif tindakan medis; dipilih di rekam medis dan biaya terisi otomatis |
 | Pendaftaran | Registrasi kunjungan, no. registrasi + nomor antrian otomatis per poli per hari |
-| Papan Antrian | Papan operator 4 kolom (menunggu → dipanggil → diperiksa → selesai) + **display antrian publik** (`/display-antrian.php`) untuk layar TV, auto-refresh 15 detik |
-| Rekam Medis | Tanda vital, anamnesa, diagnosis, tindakan, resep obat (stok berkurang otomatis, transaksi DB, tercatat di kartu stok) |
+| Janji Temu | Penjadwalan per poli/dokter; konfirmasi "Hadir" otomatis membuat pendaftaran + nomor antrian |
+| Papan Antrian | Papan operator 4 kolom + **display antrian publik** (`/display-antrian.php`) untuk layar TV: auto-refresh 15 detik, jam berjalan, **suara panggilan** (text-to-speech Indonesia) |
+| Rekam Medis | Tanda vital, anamnesa, diagnosis, tindakan (tarif otomatis), resep obat (stok berkurang otomatis, tercatat di kartu stok) |
+| Surat Keterangan | Surat sakit (istirahat) & rujukan dari rekam medis, nomor surat otomatis, halaman cetak A5 berkop RS, arsip surat |
 | Billing / Kasir | Tagihan otomatis dari biaya konsultasi + tindakan + resep, pembayaran (Tunai/Transfer/BPJS/Asuransi), cetak invoice berkop RS |
 | Laporan | Kunjungan & pendapatan per hari, rekap per poli, obat terlaris, filter rentang tanggal, ekspor CSV, cetak |
 | Kartu Stok | Mutasi stok masuk (form) dan keluar (otomatis dari resep), riwayat per obat beserta petugas |

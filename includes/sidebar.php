@@ -7,10 +7,13 @@ $menu = [
     ['page' => 'dokter',       'icon' => 'bi-person-badge',   'label' => 'Data Dokter'],
     ['page' => 'poli',         'icon' => 'bi-hospital',       'label' => 'Data Poli'],
     ['page' => 'obat',         'icon' => 'bi-capsule',        'label' => 'Data Obat'],
+    ['page' => 'tindakan',     'icon' => 'bi-tags',           'label' => 'Tarif Tindakan'],
     ['group' => 'PELAYANAN'],
     ['page' => 'pendaftaran',  'icon' => 'bi-clipboard-plus', 'label' => 'Pendaftaran'],
+    ['page' => 'janji-temu',   'icon' => 'bi-calendar-check', 'label' => 'Janji Temu'],
     ['page' => 'antrian',      'icon' => 'bi-megaphone',      'label' => 'Papan Antrian'],
     ['page' => 'rekam-medis',  'icon' => 'bi-file-medical',   'label' => 'Rekam Medis'],
+    ['page' => 'surat',        'icon' => 'bi-file-earmark-text', 'label' => 'Surat Keterangan'],
     ['group' => 'KEUANGAN'],
     ['page' => 'billing',      'icon' => 'bi-receipt',        'label' => 'Billing / Kasir'],
 ];

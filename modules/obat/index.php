@@ -224,7 +224,14 @@ require __DIR__ . '/../../includes/header.php';
                             </span>
                         </td>
                         <td class="text-end"><?= e(rupiah($r['harga'])) ?></td>
-                        <td><?= e(tgl($r['kadaluarsa'])) ?></td>
+                        <td>
+                            <?= e(tgl($r['kadaluarsa'])) ?>
+                            <?php if ($r['kadaluarsa'] && $r['kadaluarsa'] <= date('Y-m-d', strtotime('+90 days'))): ?>
+                                <span class="badge text-bg-<?= $r['kadaluarsa'] < date('Y-m-d') ? 'danger' : 'warning' ?>" title="<?= $r['kadaluarsa'] < date('Y-m-d') ? 'Sudah kadaluarsa' : 'Mendekati kadaluarsa' ?>">
+                                    <i class="bi bi-exclamation-triangle"></i>
+                                </span>
+                            <?php endif; ?>
+                        </td>
                         <td class="table-actions">
                             <button type="button" class="btn btn-sm btn-outline-success" title="Stok Masuk"
                                     data-bs-toggle="modal" data-bs-target="#modalStok"

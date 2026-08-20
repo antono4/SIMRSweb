@@ -142,7 +142,51 @@ CREATE TABLE IF NOT EXISTS pengaturan (
     nilai TEXT NULL
 ) ENGINE=InnoDB;
 
+CREATE TABLE IF NOT EXISTS tindakan (
+    id    INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+    kode  VARCHAR(15)  NOT NULL UNIQUE,
+    nama  VARCHAR(100) NOT NULL,
+    tarif DECIMAL(12,2) NOT NULL DEFAULT 0
+) ENGINE=InnoDB;
+
+CREATE TABLE IF NOT EXISTS janji_temu (
+    id             INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+    pasien_id      INT UNSIGNED NOT NULL,
+    poli_id        INT UNSIGNED NOT NULL,
+    dokter_id      INT UNSIGNED NULL,
+    tanggal        DATE NOT NULL,
+    jam            TIME NOT NULL,
+    keluhan        TEXT NULL,
+    status         ENUM('dijadwalkan','hadir','batal') NOT NULL DEFAULT 'dijadwalkan',
+    pendaftaran_id INT UNSIGNED NULL,
+    created_at     TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    CONSTRAINT fk_jt_pasien FOREIGN KEY (pasien_id) REFERENCES pasien(id),
+    CONSTRAINT fk_jt_poli   FOREIGN KEY (poli_id)   REFERENCES poli(id),
+    CONSTRAINT fk_jt_dokter FOREIGN KEY (dokter_id) REFERENCES dokter(id) ON DELETE SET NULL,
+    CONSTRAINT fk_jt_daftar FOREIGN KEY (pendaftaran_id) REFERENCES pendaftaran(id) ON DELETE SET NULL,
+    INDEX idx_jt_tanggal (tanggal, status)
+) ENGINE=InnoDB;
+
+CREATE TABLE IF NOT EXISTS surat_keterangan (
+    id             INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+    no_surat       VARCHAR(20) NOT NULL UNIQUE,
+    rekam_medis_id INT UNSIGNED NOT NULL,
+    jenis          ENUM('sakit','rujukan') NOT NULL,
+    isi            TEXT NULL,
+    created_at     TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    CONSTRAINT fk_surat_rm FOREIGN KEY (rekam_medis_id) REFERENCES rekam_medis(id)
+) ENGINE=InnoDB;
+
 -- ============================ SEED ============================
+
+INSERT INTO tindakan (kode, nama, tarif) VALUES
+('TND-001','Konsultasi dokter',50000),
+('TND-002','Injeksi',25000),
+('TND-003','Nebulizer',45000),
+('TND-004','Jahit luka',150000),
+('TND-005','Cabut gigi',200000),
+('TND-006','Cek gula darah',30000)
+ON DUPLICATE KEY UPDATE nama = VALUES(nama);
 
 INSERT INTO pengaturan (kunci, nilai) VALUES
 ('nama_rs',    'RS Sehat Sentosa'),
