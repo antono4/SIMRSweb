@@ -34,22 +34,59 @@ Aplikasi web SIMRS berbasis **PHP 8 (native, tanpa framework)**, **MySQL/MariaDB
 
 ## Instalasi
 
+### Di XAMPP (Windows/Linux)
+
 ```bash
-# 1. Buat database dan user MySQL
+# 1. Clone/copy ke htdocs (nama folder bebas, base_url otomatis)
+cp -r . /opt/lampp/htdocs/SIMRSweb
+
+# 2. Buat database dan user MySQL (via phpMyAdmin atau terminal)
+sudo /opt/lampp/bin/mysql -u root -e "CREATE DATABASE simrs CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+CREATE USER 'simrs'@'localhost' IDENTIFIED BY 'simrs123';
+GRANT ALL PRIVILEGES ON simrs.* TO 'simrs'@'localhost'; FLUSH PRIVILEGES;"
+
+# 3. Import skema + data contoh
+sudo /opt/lampp/bin/mysql -u simrs -psimrs123 simrs < database/simrs.sql
+
+# 4. Edit config/database.php: ubah DB_USER='root', DB_PASS='' (kosong) untuk XAMPP default
+
+# 5. Akses aplikasi
+http://localhost/SIMRSweb/login.php
+```
+
+### Di Linux (Apache/Nginx + PHP-FPM)
+
+```bash
+# 1. Clone/copy ke document root
+git clone https://github.com/antono4/SIMRSweb.git /var/www/html/simrs
+
+# 2. Buat database
 sudo mysql -e "CREATE DATABASE simrs CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 CREATE USER 'simrs'@'localhost' IDENTIFIED BY 'simrs123';
 GRANT ALL PRIVILEGES ON simrs.* TO 'simrs'@'localhost'; FLUSH PRIVILEGES;"
 
-# 2. Import skema + data contoh
+# 3. Import skema
 mysql -u simrs -psimrs123 simrs < database/simrs.sql
 
-# 3. Sesuaikan kredensial di config/database.php bila perlu
-
-# 4. Jalankan server pengembangan
-php -S 0.0.0.0:12000 -t /path/ke/proyek
+# 4. Akses
+http://localhost/simrs/login.php
 ```
 
-Buka `http://localhost:12000` lalu login.
+### Di PHP Built-in Server (development)
+
+```bash
+# 1. Clone
+git clone https://github.com/antono4/SIMRSweb.git
+cd SIMRSweb
+
+# 2. Setup database (lihat atas)
+
+# 3. Jalankan server
+php -S 0.0.0.0:8000 -t /path/ke/SIMRSweb
+
+# 4. Akses
+http://localhost:8000/login.php
+```
 
 ## Struktur Direktori
 
